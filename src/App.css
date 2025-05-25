@@ -1,0 +1,26 @@
+/* App.css - Color Variables */
+:root {
+  /* Primary colors */
+  --primary-blue: #0057b8;     /* Main blue color for FC Dordoi */
+  --primary-yellow: #ffd700;   /* Main yellow color for FC Dordoi */
+  
+  /* Secondary colors */
+  --secondary-blue: #003a7a;   /* Darker blue for hover states */
+  --secondary-yellow: #ffcd00; /* Darker yellow for hover states */
+  
+  /* Accent colors */
+  --black: #000000;            /* For text and some UI elements */
+  --white: #ffffff;            /* For backgrounds and text on dark elements */
+  --light-gray: #f5f5f5;       /* For backgrounds and subtle separators */
+  --medium-gray: #d1d1d1;      /* For borders and dividers */
+  --dark-gray: #333333;        /* For secondary text */
+  
+  /* Utility colors */
+  --success: #4caf50;          /* For success messages */
+  --error: #f44336;            /* For error messages */
+  --info: #2196f3;             /* For informational messages */
+  
+  /* Font families */
+  --font-primary: 'Roboto', sans-serif;
+  --font-heading: 'Montserrat', sans-serif;
+}
