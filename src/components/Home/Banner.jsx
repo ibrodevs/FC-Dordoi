@@ -15,7 +15,7 @@ const DordoyBanner = () => {
     {
       title: "ДОРДОЙ",
       subtitle: "НЕПОБЕДИМЫЕ",
-      url: "https://interactive.guim.co.uk/atoms/thrashers/2022/11/football-daily-thrasher/assets/v/1721122748492/football-daily-5-3.jpg",
+      media: "../public/видео_дор.mp4",
       cta: "КУПИТЬ БИЛЕТЫ",
       color: "#FFD700",
       secondaryColor: "#C5A300",
@@ -25,7 +25,7 @@ const DordoyBanner = () => {
     {
       title: "БАТЫРЛАР",
       subtitle: "СИЛА КЫРГЫЗСТАНА",
-      media: "/videos/team-tunnel.mp4",
+      media: "../public/Champ10n.mp4",
       cta: "СМОТРЕТЬ РАСПИСАНИЕ",
       color: "#E10600",
       secondaryColor: "#A80500",
