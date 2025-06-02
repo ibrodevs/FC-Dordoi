@@ -23,7 +23,7 @@ const DordoyBanner = () => {
       glow: true
     },
     {
-      title: "БАТЫРЛАР",
+      title: "БААТЫРЛАР",
       subtitle: "СИЛА КЫРГЫЗСТАНА",
       media: "../public/Champ10n.mp4",
       cta: "СМОТРЕТЬ РАСПИСАНИЕ",
@@ -406,7 +406,7 @@ const DordoyBanner = () => {
                 </motion.h2>
                 
                 {/* Кнопка с неоновым свечением */}
-                <motion.button
+                <a href="https://kassir.kg/en/category/sport"><motion.button
                   className={`relative px-16 py-6 font-bold rounded-lg transition-all duration-300 uppercase tracking-widest text-xl overflow-hidden group border-2`}
                   style={{ 
                     background: `linear-gradient(145deg, ${slides[currentSlide].color}, ${slides[currentSlide].secondaryColor})`,
@@ -422,7 +422,7 @@ const DordoyBanner = () => {
                     boxShadow: `0 0 40px ${slides[currentSlide].color}`,
                   }}
                   whileTap={{ scale: 0.95 }}
-                >
+                > 
                   <span className="relative z-10 flex items-center justify-center">
                     {slides[currentSlide].cta}
                     <motion.svg
@@ -444,7 +444,7 @@ const DordoyBanner = () => {
                     initial={{ x: '-100%' }}
                     whileHover={{ x: '100%', transition: { duration: 1 } }}
                   />
-                </motion.button>
+                </motion.button></a>
               </motion.div>
             </div>
 

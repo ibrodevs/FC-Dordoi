@@ -367,7 +367,7 @@ const storiesData = [
     description: "Невероятные моменты матча, где FC Dordoi вырвал победу на 89-й минуте благодаря голу капитана!",
     media: [
       { type: 'image', url: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=1200&q=80" },
-      { type: 'video', url: "https://assets.mixkit.co/videos/preview/mixkit-football-player-running-with-ball-3982-large.mp4" },
+      { type: 'image', url: "https://24.kg/files/media/80/80017.jpg" },
       { type: 'image', url: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=1200&q=80" }
     ],
     thumbnail: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=400&q=80",
@@ -380,8 +380,8 @@ const storiesData = [
     subtitle: "За кулисами",
     description: "Эксклюзивные кадры интенсивной тренировки с нашим капитаном перед важным матчем.",
     media: [
-      { type: 'video', url: "https://assets.mixkit.co/videos/preview/mixkit-athlete-training-on-a-running-track-3973-large.mp4" },
-      { type: 'image', url: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=1200&q=80" }
+      { type: 'image', url: "https://football.by/storage/images/post_img/1714321470.jpg" },
+      { type: 'image', url: "https://prosports.kg/upload/news/content/202006/203933_3267866d1b9c27b48022f15352ea3894.jpg" }
     ],
     thumbnail: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=400&q=80",
     isNew: false,
@@ -395,7 +395,7 @@ const storiesData = [
     media: [
       { type: 'image', url: "https://images.unsplash.com/photo-1521302200778-33500795e128?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=1200&q=80" },
       { type: 'image', url: "https://images.unsplash.com/photo-1483721310020-03333e577078?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=1200&q=80" },
-      { type: 'video', url: "https://assets.mixkit.co/videos/preview/mixkit-man-and-woman-posing-in-sportswear-3974-large.mp4" }
+      { type: 'image', url: "https://fc-dordoi.kg/images/stories/news/vesna_2025/murasdordoi_1.jpg" }
     ],
     thumbnail: "https://images.unsplash.com/photo-1521302200778-33500795e128?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=400&q=80",
     isNew: true,
@@ -407,10 +407,10 @@ const storiesData = [
     subtitle: "Атмосфера",
     description: "Энергия и страсть наших болельщиков на последнем домашнем матче сезона.",
     media: [
-      { type: 'video', url: "https://assets.mixkit.co/videos/preview/mixkit-crowd-cheering-at-a-stadium-3975-large.mp4" },
+      { type: 'image', url: "https://fc-dordoi.kg/image?format=raw&id=15208&type=img" },
       { type: 'image', url: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=1200&q=80" }
     ],
-    thumbnail: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=400&q=80",
+    thumbnail: "https://fc-dordoi.kg/image?format=raw&id=15209&type=img",
     isNew: false,
     date: "30.04.2025"
   },
@@ -420,10 +420,10 @@ const storiesData = [
     subtitle: "Следующее поколение",
     description: "Знакомьтесь с будущими звёздами FC Dordoi, которые проходят обучение в нашей академии.",
     media: [
-      { type: 'image', url: "https://images.unsplash.com/photo-1541216970279-affbfdd55aa8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=1200&q=80" },
-      { type: 'image', url: "https://images.unsplash.com/photo-1541216970279-affbfdd55aa8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=1200&q=80" }
+      { type: 'image', url: "https://fc-dordoi.kg/image?format=raw&id=14121&type=img" },
+      { type: 'image', url: "https://fc-dordoi.kg/image?format=raw&id=14120&type=img" }
     ],
-    thumbnail: "https://images.unsplash.com/photo-1541216970279-affbfdd55aa8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=400&q=80",
+    thumbnail: "https://fc-dordoi.kg/image?format=raw&id=14117&type=img",
     isNew: true,
     date: "28.04.2025"
   },
@@ -433,7 +433,7 @@ const storiesData = [
     subtitle: "Эксклюзив",
     description: "Главный тренер команды раскрывает планы на сезон и стратегию подготовки к чемпионату.",
     media: [
-      { type: 'video', url: "https://assets.mixkit.co/videos/preview/mixkit-man-talking-on-video-call-3983-large.mp4" },
+      { type: 'video', path: "./interv.mp4" },
       { type: 'image', url: "https://images.unsplash.com/photo-1543357486-cf2718d69e13?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=1200&q=80" }
     ],
     thumbnail: "https://images.unsplash.com/photo-1543357486-cf2718d69e13?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=400&q=80",

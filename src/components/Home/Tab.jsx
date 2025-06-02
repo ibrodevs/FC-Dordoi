@@ -34,8 +34,8 @@ const MatchesPage = () => {
         awayTeam: 'Алга',
         tournament: 'premier',
         location: 'Стадион Дордой, Бишкек',
-        homeLogo: '/logos/dordoy.png',
-        awayLogo: '/logos/alga.png',
+        homeLogo: 'https://upload.wikimedia.org/wikipedia/ru/0/01/%D0%A4%D0%9A_%D0%94%D0%BE%D1%80%D0%B4%D0%BE%D0%B9.png',
+        awayLogo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/FK_Alga_Bishkek_Logo.svg/1200px-FK_Alga_Bishkek_Logo.svg.png',
         ticketLink: '#',
         broadcastLink: '#'
       },
@@ -60,8 +60,8 @@ const MatchesPage = () => {
           yellowCards: '2 - 4',
           redCards: '0 - 1'
         },
-        homeLogo: '/logos/dordoy.png',
-        awayLogo: '/logos/abdysh-ata.png',
+        homeLogo: 'https://upload.wikimedia.org/wikipedia/ru/0/01/%D0%A4%D0%9A_%D0%94%D0%BE%D1%80%D0%B4%D0%BE%D0%B9.png',
+        awayLogo: 'https://upload.wikimedia.org/wikipedia/ru/thumb/5/56/%D0%AD%D0%BC%D0%B1%D0%BB%D0%B5%D0%BC%D0%B0_%D0%A4%D0%9A_%D0%90%D0%B1%D0%B4%D1%8B%D1%88-%D0%90%D1%82%D0%B0.svg/1200px-%D0%AD%D0%BC%D0%B1%D0%BB%D0%B5%D0%BC%D0%B0_%D0%A4%D0%9A_%D0%90%D0%B1%D0%B4%D1%8B%D1%88-%D0%90%D1%82%D0%B0.svg.png',
         highlightsLink: '#',
         reportLink: '#'
       },
@@ -75,7 +75,7 @@ const MatchesPage = () => {
       title: 'Дордой разгромил Абдыш-Ату в дерби',
       date: '2023-10-29',
       excerpt: 'В центральном матче тура Дордой одержал уверенную победу со счетом 3:1...',
-      image: '/news/match1.jpg',
+      image: 'https://cdn-1.aki.kg/cdn-st-0/qem/I/2551947.f0bcae5f75c6b1c7844832fef9ba7e8d.jpg',
       link: '#'
     },
     // ... больше новостей

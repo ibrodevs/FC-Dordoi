@@ -10,21 +10,29 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@heroicons/react": "^2.2.0",
     "@react-three/drei": "^10.0.8",
     "@react-three/fiber": "^9.1.2",
+    "@react-three/postprocessing": "^3.0.4",
     "@tailwindcss/vite": "^4.1.7",
-    "framer-motion": "^12.14.0",
+    "framer-motion": "^12.15.0",
+    "lucide-react": "^0.511.0",
     "react": "^19.1.0",
+    "react-countdown": "^2.3.6",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
+    "react-intersection-observer": "^9.16.0",
     "react-responsive": "^10.0.1",
     "react-router-dom": "^7.6.1",
     "react-scroll": "^1.9.3",
+    "react-scroll-parallax": "^3.4.5",
     "react-tabs": "^6.1.0",
+    "react-tsparticles": "^2.12.2",
     "swiper": "^11.2.8",
     "tailwindcss": "^4.1.7",
-    "three": "^0.176.0"
+    "three": "^0.176.0",
+    "tsparticles": "^3.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
