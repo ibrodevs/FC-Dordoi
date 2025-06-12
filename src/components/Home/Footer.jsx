@@ -71,7 +71,7 @@ const Footer = () => {
           <motion.div variants={itemVariants}>
             <div className="flex items-center mb-6">
               <div className="bg-yellow-500 text-blue-900 font-bold text-2xl w-12 h-12 rounded-full flex items-center justify-center mr-3">
-                Д
+                <img src="/vite.png" alt="" />
               </div>
               <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-yellow-200">
                 ДОРДОЙ

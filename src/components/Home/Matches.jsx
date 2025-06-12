@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
-import { FiCalendar, FiArrowRight, FiAward, FiHome, FiUsers, FiClock, FiStar, FiVideo, FiShoppingCart } from 'react-icons/fi';
-import { GiSoccerBall, GiSoccerKick, GiChampions, GiGoalKeeper } from 'react-icons/gi';
-import { RiLiveFill } from 'react-icons/ri';
+import { FiCalendar, FiShoppingCart } from 'react-icons/fi';
+import { GiSoccerBall } from 'react-icons/gi';
 import { IoStatsChart } from 'react-icons/io5';
+import { RiLiveFill } from 'react-icons/ri';
+import MatchesView from '../MatchesView';
+import TableView from '../TableView';
+import CalendarView from '../CalendarView';
 
 const DordoyUltimate = () => {
   const [activeView, setActiveView] = useState('matches');
@@ -11,8 +14,6 @@ const DordoyUltimate = () => {
   const [standings, setStandings] = useState([]);
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('upcoming');
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [heroVisible, setHeroVisible] = useState(true);
   const containerRef = useRef(null);
   
@@ -32,12 +33,10 @@ const DordoyUltimate = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Имитация загрузки данных с анимацией
         await new Promise(resolve => setTimeout(resolve, 1800));
         
-        // Расширенные моковые данные
         const mockMatches = [
-          {
+           {
             id: 1,
             date: '2023-06-15',
             time: '18:00',
@@ -146,14 +145,6 @@ const DordoyUltimate = () => {
     
     fetchData();
   }, []);
-
-  const filteredMatches = matches.filter(match => 
-    activeTab === 'upcoming' ? match.status === 'upcoming' : match.status === 'completed'
-  );
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white overflow-x-hidden" ref={containerRef}>
@@ -286,7 +277,7 @@ const DordoyUltimate = () => {
       </AnimatePresence>
 
       {/* Floating Navigation */}
-      <motion.div 
+        <motion.div 
         className={`fixed top-4 left-0 right-0 z-50 px-4 transition-all ${heroVisible ? 'opacity-0 -translate-y-10' : 'opacity-100 translate-y-0'}`}
         initial={{ opacity: 0 }}
       >
@@ -386,11 +377,7 @@ const DordoyUltimate = () => {
                 transition={{ duration: 0.7, type: "spring" }}
               >
                 {activeView === 'matches' && (
-                  <MatchesView 
-                    matches={filteredMatches} 
-                    activeTab={activeTab} 
-                    setActiveTab={setActiveTab}
-                  />
+                  <MatchesView matches={matches} />
                 )}
                 
                 {activeView === 'table' && (
@@ -398,11 +385,7 @@ const DordoyUltimate = () => {
                 )}
                 
                 {activeView === 'calendar' && (
-                  <CalendarView 
-                    matches={matches} 
-                    selectedDate={selectedDate} 
-                    onDateChange={handleDateChange}
-                  />
+                  <CalendarView matches={matches} />
                 )}
               </motion.div>
             </AnimatePresence>
@@ -410,7 +393,7 @@ const DordoyUltimate = () => {
         )}
       </div>
 
-      {/* Live Match Banner (example) */}
+      {/* Live Match Banner */}
       <motion.div 
         className="fixed bottom-0 left-0 right-0 bg-red-600 text-white z-40 py-3 px-6 shadow-lg"
         initial={{ y: 100 }}
@@ -430,7 +413,6 @@ const DordoyUltimate = () => {
             whileTap={{ scale: 0.95 }}
             className="bg-black/30 hover:bg-black/40 px-4 py-2 rounded-lg flex items-center text-sm font-bold backdrop-blur-sm"
           >
-            <FiVideo className="mr-2" /> Смотреть
           </motion.button>
         </div>
       </motion.div>
@@ -446,286 +428,6 @@ const DordoyUltimate = () => {
         </button>
       </motion.div>
     </div>
-  );
-};
-
-const MatchesView = ({ matches, activeTab, setActiveTab }) => {
-  return (
-    <div>
-      {/* Tabs */}
-      <div className="flex justify-center mb-12">
-        <div className="bg-gray-800 rounded-full p-1 inline-flex shadow-lg">
-          <button
-            onClick={() => setActiveTab('upcoming')}
-            className={`px-8 py-3 rounded-full font-bold transition-all flex items-center ${activeTab === 'upcoming' ? 'bg-yellow-500 text-gray-900' : 'text-gray-300 hover:text-white'}`}
-          >
-            <FiCalendar className="mr-2" /> Ближайшие матчи
-          </button>
-          <button
-            onClick={() => setActiveTab('completed')}
-            className={`px-8 py-3 rounded-full font-bold transition-all flex items-center ${activeTab === 'completed' ? 'bg-yellow-500 text-gray-900' : 'text-gray-300 hover:text-white'}`}
-          >
-            <FiAward className="mr-2" /> Прошедшие матчи
-          </button>
-        </div>
-      </div>
-
-      {/* Matches List */}
-      <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-2">
-        {matches.length > 0 ? (
-          matches.map((match) => (
-            <MatchCard key={match.id} match={match} activeTab={activeTab} />
-          ))
-        ) : (
-          <div className="col-span-full text-center py-12">
-            <p className="text-xl text-gray-400">Нет матчей для отображения</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const TableView = ({ standings }) => {
-  return (
-    <div className="bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
-      <div className="p-6 bg-gray-700">
-        <h2 className="text-2xl font-bold flex items-center">
-          <FiAward className="mr-3 text-yellow-400" /> Турнирная таблица Премьер Лиги
-        </h2>
-      </div>
-      
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-700 text-gray-300">
-            <tr>
-              <th className="py-4 px-6 text-left">Поз.</th>
-              <th className="py-4 px-6 text-left">Команда</th>
-              <th className="py-4 px-6 text-center">И</th>
-              <th className="py-4 px-6 text-center">В</th>
-              <th className="py-4 px-6 text-center">Н</th>
-              <th className="py-4 px-6 text-center">П</th>
-              <th className="py-4 px-6 text-center">О</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-700">
-            {standings.map((team, index) => (
-              <motion.tr 
-                key={team.team}
-                className={`${team.team === 'Дордой' ? 'bg-gray-750 font-bold' : 'hover:bg-gray-750'}`}
-                whileHover={{ scale: 1.01 }}
-              >
-                <td className="py-4 px-6">
-                  <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full ${team.position <= 2 ? 'bg-green-500' : team.position <= 4 ? 'bg-blue-500' : 'bg-gray-600'}`}>
-                    {team.position}
-                  </span>
-                </td>
-                <td className="py-4 px-6 font-medium">
-                  <div className="flex items-center">
-                    <img 
-                      src={team.team === 'Дордой' ? 'https://via.placeholder.com/30/FFFF00/000000?text=DD' : 'https://via.placeholder.com/30'} 
-                      alt={team.team} 
-                      className="w-8 h-8 mr-3 rounded-full"
-                    />
-                    {team.team}
-                  </div>
-                </td>
-                <td className="py-4 px-6 text-center">{team.played}</td>
-                <td className="py-4 px-6 text-center">{team.won}</td>
-                <td className="py-4 px-6 text-center">{team.drawn}</td>
-                <td className="py-4 px-6 text-center">{team.lost}</td>
-                <td className="py-4 px-6 text-center font-bold">{team.points}</td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      
-      <div className="p-4 bg-gray-700 text-sm text-gray-400">
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center">
-            <span className="inline-block w-3 h-3 rounded-full bg-green-500 mr-2"></span>
-            Лига чемпионов АФК
-          </div>
-          <div className="flex items-center">
-            <span className="inline-block w-3 h-3 rounded-full bg-blue-500 mr-2"></span>
-            Кубок АФК
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const CalendarView = ({ matches, selectedDate, onDateChange }) => {
-  // Упрощенный календарь для демонстрации
-  const daysInMonth = 30;
-  const startDay = 3; // Среда
-  const matchDates = matches.map(m => m.date);
-  
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-2xl font-bold flex items-center">
-          <FiCalendar className="mr-3 text-yellow-400" /> Календарь матчей
-        </h2>
-        <div className="bg-gray-800 rounded-lg px-4 py-2">
-          <span className="font-bold">Июнь 2023</span>
-        </div>
-      </div>
-      
-      <div className="bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
-        {/* Days of week */}
-        <div className="grid grid-cols-7 bg-gray-700 text-gray-300 text-center font-medium">
-          {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map(day => (
-            <div key={day} className="py-3">{day}</div>
-          ))}
-        </div>
-        
-        {/* Calendar grid */}
-        <div className="grid grid-cols-7 gap-1 p-2">
-          {Array.from({ length: startDay }).map((_, i) => (
-            <div key={`empty-${i}`} className="h-12"></div>
-          ))}
-          
-          {Array.from({ length: daysInMonth }).map((_, i) => {
-            const day = i + 1;
-            const dateStr = `2023-06-${day < 10 ? '0' + day : day}`;
-            const hasMatch = matchDates.includes(dateStr);
-            const isSelected = dateStr === selectedDate;
-            
-            return (
-              <motion.div
-                key={`day-${day}`}
-                className={`h-16 flex flex-col items-center justify-center rounded-lg cursor-pointer transition-all ${isSelected ? 'bg-yellow-500 text-gray-900 font-bold' : hasMatch ? 'bg-gray-750 hover:bg-gray-700' : 'hover:bg-gray-700'}`}
-                onClick={() => onDateChange(dateStr)}
-                whileHover={{ scale: 1.05 }}
-              >
-                <div>{day}</div>
-                {hasMatch && (
-                  <div className={`w-2 h-2 rounded-full ${isSelected ? 'bg-gray-900' : 'bg-yellow-400'}`}></div>
-                )}
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
-      
-      {/* Matches on selected date */}
-      <div className="mt-8">
-        <h3 className="text-xl font-bold mb-6 flex items-center">
-          <FiClock className="mr-2" /> Матчи на выбранную дату
-        </h3>
-        
-        {matches.filter(m => m.date === selectedDate).length > 0 ? (
-          <div className="grid gap-6">
-            {matches.filter(m => m.date === selectedDate).map(match => (
-              <MatchCard key={match.id} match={match} activeTab="upcoming" />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12 bg-gray-800 rounded-xl">
-            <p className="text-gray-400">На выбранную дату матчей не запланировано</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const MatchCard = ({ match, activeTab }) => {
-  const isCompleted = activeTab === 'completed';
-  
-  return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      className={`bg-gray-800 rounded-xl overflow-hidden shadow-lg relative ${isCompleted ? 'border-l-4 border-yellow-500' : 'border-l-4 border-blue-500'}`}
-    >
-      {isCompleted && match.homeTeam === 'Дордой' && match.homeScore > match.awayScore && (
-        <div className="absolute top-0 right-0 bg-yellow-500 text-gray-900 px-3 py-1 text-sm font-bold rounded-bl-lg">
-          ПОБЕДА!
-        </div>
-      )}
-      
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center">
-            <img src={match.competitionLogo} alt={match.competition} className="w-8 h-8 mr-3 rounded-full" />
-            <span className="text-sm font-semibold text-gray-400">{match.competition}</span>
-          </div>
-          <span className="text-sm bg-gray-700 px-3 py-1 rounded-full">
-            {match.date} • {match.time}
-          </span>
-        </div>
-        
-        <div className="flex items-center justify-between py-4">
-          <div className="flex-1 text-right">
-            <h3 className="text-xl font-bold">{match.homeTeam}</h3>
-            {match.homeTeam === 'Дордой' && (
-              <span className="text-xs bg-yellow-500 text-gray-900 px-2 py-0.5 rounded-full">НАША КОМАНДА</span>
-            )}
-          </div>
-          
-          <div className="mx-6 flex items-center">
-            {isCompleted ? (
-              <div className="bg-gray-900 px-6 py-2 rounded-lg">
-                <span className="text-2xl font-bold">
-                  {match.homeScore} : {match.awayScore}
-                </span>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center">
-                <span className="text-2xl font-bold">vs</span>
-                <span className="text-xs text-gray-400 mt-1">{match.time}</span>
-              </div>
-            )}
-          </div>
-          
-          <div className="flex-1 text-left">
-            <h3 className="text-xl font-bold">{match.awayTeam}</h3>
-            {match.awayTeam === 'Дордой' && (
-              <span className="text-xs bg-yellow-500 text-gray-900 px-2 py-0.5 rounded-full">НАША КОМАНДА</span>
-            )}
-          </div>
-        </div>
-        
-        <div className="mt-4 pt-4 border-t border-gray-700">
-          <div className="flex items-center text-sm text-gray-400">
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            {match.venue}
-          </div>
-        </div>
-        
-        {!isCompleted && (
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <button className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-all flex items-center justify-center">
-              <FiCalendar className="mr-2" /> Напомнить
-            </button>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-all flex items-center justify-center">
-              <FiArrowRight className="mr-2" /> Билеты
-            </button>
-          </div>
-        )}
-      </div>
-    </motion.div>
-  );
-};
-
-const StatCard = ({ icon, value, label, color }) => {
-  return (
-    <motion.div 
-      className="bg-gray-800 rounded-xl p-6 text-center shadow-lg"
-      whileHover={{ y: -5 }}
-    >
-      <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r ${color} mb-4`}>
-        {icon}
-      </div>
-      <h3 className="text-3xl font-bold mb-2">{value}</h3>
-      <p className="text-gray-400">{label}</p>
-    </motion.div>
   );
 };
 
