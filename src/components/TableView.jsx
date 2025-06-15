@@ -10,136 +10,97 @@ const TableView = ({ standings }) => {
   };
 
   const getPositionStyle = (position) => {
-    if (position === 1) return 'bg-gradient-to-br from-yellow-400 via-yellow-200 to-yellow-500 text-black shadow-[0_0_16px_4px_rgba(255,255,0,0.5)]';
-    if (position <= 2) return 'bg-gradient-to-br from-emerald-400 to-teal-500 text-white shadow-[0_0_12px_2px_rgba(16,185,129,0.4)]';
+    if (position === 1) return 'bg-gradient-to-br from-yellow-400 to-yellow-500 text-gray-900 shadow-md';
+    if (position <= 2) return 'bg-gradient-to-br from-emerald-400 to-teal-500 text-white';
     if (position <= 4) return 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white';
-    if (position >= standings.length - 2) return 'bg-gradient-to-br from-red-600 to-rose-600 text-white shadow-[0_0_12px_2px_rgba(239,68,68,0.4)]';
+    if (position >= standings.length - 2) return 'bg-gradient-to-br from-red-500 to-rose-500 text-white';
     return 'bg-gradient-to-br from-gray-700 to-gray-800 text-white';
   };
 
-  // Для анимации блесток в заголовке
-  const Sparkles = () => (
-    <div className="absolute inset-0 pointer-events-none">
-      {[...Array(18)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 rounded-full bg-yellow-200 opacity-70 blur-[2px]"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`
-          }}
-          animate={{
-            opacity: [0.8, 0.2, 0.8],
-            scale: [1, 1.5, 1],
-            y: [0, -8, 0]
-          }}
-          transition={{
-            duration: 2 + Math.random() * 2,
-            repeat: Infinity,
-            delay: Math.random() * 2
-          }}
-        />
-      ))}
-    </div>
-  );
-
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="bg-gradient-to-br from-gray-900 via-black to-gray-800 rounded-3xl shadow-[0_8px_48px_rgba(80,0,180,0.25)] border border-gray-700 overflow-hidden relative"
+      transition={{ duration: 0.5 }}
+      className="bg-gray-900 rounded-xl shadow-xl border border-gray-700 overflow-hidden"
     >
-      {/* Заголовок с параллаксом и блестками */}
-      <div className="p-7 bg-gradient-to-r from-purple-900 via-indigo-900 to-blue-900 relative overflow-hidden shadow-inner">
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 pointer-events-none"/>
-        <Sparkles />
-        <motion.h2 
-          className="text-4xl md:text-5xl font-extrabold flex items-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-100 to-white drop-shadow-glow"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
+      {/* Заголовок с эффектным градиентом */}
+      <div className="p-6 bg-gradient-to-r from-purple-900 to-blue-900 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"/>
+        <h2 className="text-2xl md:text-3xl font-bold flex items-center text-white relative">
           <motion.span
-            animate={{
-              textShadow: [
-                '0 0 16px #fff, 0 0 32px #facc15',
-                '0 0 32px #fff, 0 0 64px #facc15',
-                '0 0 16px #fff, 0 0 32px #facc15'
-              ]
-            }}
-            transition={{ repeat: Infinity, duration: 2 }}
+            animate={{ rotate: [0, 5, -5, 0] }}
+            transition={{ repeat: Infinity, duration: 4 }}
+            className="inline-block mr-3"
           >
-            <FiAward className="mr-4 text-yellow-400 animate-pulse drop-shadow" />
+            <FiAward className="text-yellow-300 text-2xl" />
           </motion.span>
-          Турнирная таблица Премьер Лиги
-        </motion.h2>
+          Турнирная таблица
+        </h2>
+        <p className="text-gray-300 mt-1 text-sm">Сезон 2023/24</p>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-sm md:text-base">
-          <thead className="bg-gradient-to-r from-gray-800 to-gray-900 text-gray-300 uppercase tracking-wider">
+        <table className="w-full">
+          <thead className="bg-gray-800 text-gray-300">
             <tr>
-              <th className="py-5 px-6 text-left">Поз.</th>
-              <th className="py-5 px-6 text-left">Команда</th>
-              <th className="py-5 px-6 text-center">И</th>
-              <th className="py-5 px-6 text-center">В</th>
-              <th className="py-5 px-6 text-center">Н</th>
-              <th className="py-5 px-6 text-center">П</th>
-              <th className="py-5 px-6 text-center">О</th>
-              <th className="py-5 px-3"></th>
+              <th className="py-4 px-4 text-left">#</th>
+              <th className="py-4 px-4 text-left">Команда</th>
+              <th className="py-4 px-4 text-center">И</th>
+              <th className="py-4 px-4 text-center">В</th>
+              <th className="py-4 px-4 text-center">Н</th>
+              <th className="py-4 px-4 text-center">П</th>
+              <th className="py-4 px-4 text-center">О</th>
+              <th className="py-4 px-2"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-700/40">
+          <tbody className="divide-y divide-gray-700/50">
             {standings.map((team, index) => (
               <motion.tr 
                 key={team.team}
-                initial={{ opacity: 0, x: -30 }}
+                initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.07, type: 'spring', stiffness: 80 }}
-                className={`transition-all duration-300 ease-in-out transform hover:scale-[1.012] ${expandedTeam === team.team ? 'bg-gradient-to-r from-gray-800/80 to-gray-900/80' : 'hover:bg-gray-800/60'} ${team.team === 'Дордой' ? 'bg-yellow-800/20 font-bold' : ''}`}
+                transition={{ delay: index * 0.03 }}
+                className={`hover:bg-gray-800/30 ${expandedTeam === team.team ? 'bg-gray-800/50' : ''}`}
               >
-                <td className="py-4 px-6">
-                  <span 
-                    className={`inline-flex items-center justify-center w-11 h-11 rounded-full text-base font-extrabold shadow-inner ring-2 ring-yellow-200/30 ${getPositionStyle(team.position)} transition-all duration-300`}
+                <td className="py-3 px-4">
+                  <motion.span 
+                    className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold ${getPositionStyle(team.position)}`}
+                    whileHover={{ scale: 1.1 }}
                   >
                     {team.position}
-                  </span>
+                  </motion.span>
                 </td>
-                <td className="py-4 px-6 font-medium">
-                  <div className="flex items-center space-x-3">
-                    <div className="relative">
-                      <motion.img 
-                        whileHover={{ rotate: [0, 10, -10, 0], scale: [1, 1.15, 1] }}
-                        src={`https://ui-avatars.com/api/?name=${encodeURIComponent(team.team)}&background=${index % 2 === 0 ? 'ffd700' : '4f46e5'}&color=222&size=48&bold=true`}
-                        alt={team.team} 
-                        className="w-12 h-12 rounded-full border-2 border-yellow-400/70 shadow-lg bg-gradient-to-br from-gray-700 to-gray-900"
-                      />
-                      {team.position === 1 && (
-                        <motion.div 
-                          className="absolute -top-1 -right-1 bg-yellow-400 rounded-full w-6 h-6 flex items-center justify-center shadow-lg"
-                          animate={{ scale: [1, 1.3, 1] }}
-                          transition={{ repeat: Infinity, duration: 1.5 }}
-                        >
-                          <span className="text-base font-bold text-gray-900">👑</span>
-                        </motion.div>
-                      )}
-                    </div>
-                    <span className={`${team.team === 'Дордой' ? 'text-yellow-300' : 'text-gray-100'} text-lg font-semibold`}>
+                <td className="py-3 px-4">
+                  <div className="flex items-center gap-3">
+                    <motion.img 
+                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(team.team)}&background=random&color=fff&size=48`}
+                      alt={team.team} 
+                      className="w-8 h-8 rounded-full border-2 border-gray-600"
+                      whileHover={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 0.5 }}
+                    />
+                    <span className="font-medium text-white">
                       {team.team}
+                      {team.position === 1 && (
+                        <span className="ml-2 text-yellow-300 text-xs bg-yellow-500/20 px-2 py-0.5 rounded-full">
+                          лидер
+                        </span>
+                      )}
                     </span>
                   </div>
                 </td>
-                <td className="py-4 px-6 text-center text-gray-300">{team.played}</td>
-                <td className="py-4 px-6 text-center text-green-400 font-bold">{team.won}</td>
-                <td className="py-4 px-6 text-center text-blue-400 font-bold">{team.drawn}</td>
-                <td className="py-4 px-6 text-center text-red-400 font-bold">{team.lost}</td>
-                <td className="py-4 px-6 text-center font-extrabold text-white text-lg">{team.points}</td>
-                <td className="py-4 px-3 text-center">
+                <td className="py-3 px-4 text-center text-gray-300">{team.played}</td>
+                <td className="py-3 px-4 text-center text-green-400 font-medium">{team.won}</td>
+                <td className="py-3 px-4 text-center text-blue-400 font-medium">{team.drawn}</td>
+                <td className="py-3 px-4 text-center text-red-400 font-medium">{team.lost}</td>
+                <td className="py-3 px-4 text-center font-bold text-white">{team.points}</td>
+                <td className="py-3 px-2 text-center">
                   <motion.button
                     onClick={() => toggleExpand(team.team)}
-                    whileTap={{ scale: 0.85 }}
-                    className="text-gray-400 hover:text-yellow-300 p-2 rounded-full bg-gradient-to-br from-gray-900 to-gray-700 shadow-lg transition-all"
+                    whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
+                    whileTap={{ scale: 0.9 }}
+                    className="text-gray-400 hover:text-white p-1 rounded-full transition-colors"
                   >
                     {expandedTeam === team.team ? <FiChevronUp /> : <FiChevronDown />}
                   </motion.button>
@@ -156,42 +117,56 @@ const TableView = ({ standings }) => {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <td colSpan="8" className="bg-gradient-to-br from-gray-900/90 to-gray-800/90 p-7 text-gray-100 relative overflow-hidden">
+                    <td colSpan="8" className="bg-gray-800/70 p-4">
                       <motion.div
-                        initial={{ scale: 0.95, y: 10 }}
-                        animate={{ scale: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="flex flex-col md:flex-row items-center gap-6"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="flex flex-col md:flex-row items-center gap-6 p-4 bg-gray-700/30 rounded-lg border border-gray-600/30"
                       >
-                        <div className="flex-shrink-0">
+                        <div className="flex-shrink-0 relative">
                           <img
-                            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(team.team)}&background=ffd700&color=222&size=72&bold=true`}
+                            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(team.team)}&background=4f46e5&color=fff&size=64`}
                             alt={team.team}
-                            className="w-20 h-20 rounded-full border-4 border-yellow-400/70 shadow-xl bg-gradient-to-br from-yellow-300 to-yellow-400"
+                            className="w-16 h-16 rounded-full border-2 border-yellow-400"
                           />
+                          {team.position === 1 && (
+                            <motion.div 
+                              className="absolute -top-2 -right-2 bg-yellow-400 rounded-full w-6 h-6 flex items-center justify-center shadow-md"
+                              animate={{ scale: [1, 1.2, 1] }}
+                              transition={{ repeat: Infinity, duration: 2 }}
+                            >
+                              <span className="text-xs font-bold text-gray-900">1</span>
+                            </motion.div>
+                          )}
                         </div>
-                        <div className="flex-1 space-y-2">
-                          <div className="flex items-center gap-2 text-xl font-bold text-yellow-200">
+                        <div className="flex-1 space-y-3">
+                          <h3 className="text-lg font-bold text-yellow-300 flex items-center gap-2">
                             <FiInfo className="text-yellow-400" />
-                            {team.team} — подробная информация
-                          </div>
-                          <div className="flex flex-wrap gap-4 mt-2">
-                            <Stat icon={<FiTrendingUp />} label="Последние матчи" value="W W D L W" color="text-emerald-400" />
-                            <Stat icon={<FiUsers />} label="Состав" value="22 игрока" color="text-blue-300" />
-                            <Stat icon={<FiAward />} label="Трофеи" value="3" color="text-yellow-300" />
-                          </div>
-                          <div className="mt-3 text-gray-300/90">
-                            <span className="text-yellow-300 font-semibold">Форма:</span> {team.form || 'Нет данных'}
+                            {team.team} — статистика
+                          </h3>
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <Stat 
+                              icon={<FiTrendingUp className="text-green-400" />} 
+                              label="Форма" 
+                              value={team.form || '—'} 
+                              highlight={team.form?.startsWith('W')}
+                            />
+                            <Stat 
+                              icon={<FiUsers className="text-blue-400" />} 
+                              label="Состав" 
+                              value="22 игрока" 
+                            />
+                            <Stat 
+                              icon={<FiAward className="text-yellow-400" />} 
+                              label="Трофеи" 
+                              value="3" 
+                            />
                           </div>
                         </div>
                       </motion.div>
-                      {/* Красивый неоновый фон */}
-                      <motion.div
-                        className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-2/3 h-32 blur-2xl opacity-30 bg-gradient-to-r from-yellow-400 via-blue-500 to-purple-500 pointer-events-none"
-                        animate={{ opacity: [0.2, 0.35, 0.2] }}
-                        transition={{ repeat: Infinity, duration: 3 }}
-                      />
                     </td>
                   </motion.tr>
                 );
@@ -201,31 +176,56 @@ const TableView = ({ standings }) => {
         </table>
       </div>
 
-      <div className="p-6 bg-gradient-to-r from-gray-800 to-gray-900 border-t border-gray-700 text-sm">
-        <div className="flex flex-wrap items-center gap-5">
-          <Legend color="from-yellow-400 to-yellow-600" label="Чемпион" glow="shadow-[0_0_18px_4px_rgba(250,204,21,0.7)]" />
-          <Legend color="from-emerald-400 to-teal-500" label="Лига чемпионов АФК" glow="shadow-[0_0_16px_3px_rgba(16,185,129,0.5)]" />
-          <Legend color="from-blue-500 to-indigo-500" label="Кубок АФК" glow="shadow-[0_0_12px_2px_rgba(59,130,246,0.4)]" />
-          <Legend color="from-red-600 to-rose-600" label="Зона вылета" glow="shadow-[0_0_14px_2px_rgba(239,68,68,0.5)]" />
+      <div className="p-4 bg-gray-800 border-t border-gray-700">
+        <div className="flex flex-wrap justify-center gap-4 text-sm">
+          <Legend 
+            color="from-yellow-400 to-yellow-500" 
+            label="1 место" 
+            icon="🏆"
+          />
+          <Legend 
+            color="from-emerald-400 to-teal-500" 
+            label="Лига Чемпионов" 
+            icon="⭐"
+          />
+          <Legend 
+            color="from-blue-500 to-indigo-500" 
+            label="Еврокубки" 
+            icon="🌍"
+          />
+          <Legend 
+            color="from-red-500 to-rose-500" 
+            label="Вылет" 
+            icon="⚠️"
+          />
         </div>
       </div>
     </motion.div>
   );
 };
 
-const Stat = ({ icon, label, value, color }) => (
-  <div className="flex items-center gap-2 bg-gray-800/80 rounded-xl px-4 py-2 shadow-inner">
-    <span className={`text-xl ${color}`}>{icon}</span>
-    <span className="text-gray-300">{label}:</span>
-    <span className={`font-bold ${color}`}>{value}</span>
-  </div>
+const Stat = ({ icon, label, value, highlight }) => (
+  <motion.div 
+    className={`flex items-center gap-3 bg-gray-800/50 rounded-lg px-3 py-2 ${highlight ? 'ring-1 ring-green-400/50' : ''}`}
+    whileHover={{ y: -2 }}
+  >
+    <span className="text-lg">{icon}</span>
+    <div>
+      <div className="text-xs text-gray-400">{label}</div>
+      <div className={`font-medium ${highlight ? 'text-green-400' : 'text-white'}`}>{value}</div>
+    </div>
+  </motion.div>
 );
 
-const Legend = ({ color, label, glow }) => (
-  <div className="flex items-center">
-    <span className={`inline-block w-4 h-4 rounded-full bg-gradient-to-r ${color} mr-2 ${glow}`}></span>
-    <span className="text-gray-300 font-semibold drop-shadow">{label}</span>
-  </div>
+const Legend = ({ color, label, icon }) => (
+  <motion.div 
+    className="flex items-center gap-2 px-3 py-1 rounded-full bg-gray-700/50"
+    whileHover={{ scale: 1.05 }}
+  >
+    <span className={`inline-block w-3 h-3 rounded-full bg-gradient-to-r ${color}`}></span>
+    <span className="text-gray-300 text-sm">{label}</span>
+    {icon && <span className="text-xs">{icon}</span>}
+  </motion.div>
 );
 
 export default TableView;
