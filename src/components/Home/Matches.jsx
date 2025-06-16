@@ -1,15 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 import { FiCalendar, FiShoppingCart } from 'react-icons/fi';
-import { GiSoccerBall } from 'react-icons/gi';
-import { IoStatsChart } from 'react-icons/io5';
 import { RiLiveFill } from 'react-icons/ri';
 import MatchesView from '../MatchesView';
 import TableView from '../TableView';
 import CalendarView from '../CalendarView';
 
 const DordoyUltimate = () => {
-  const [activeView, setActiveView] = useState('matches');
   const [matches, setMatches] = useState([]);
   const [standings, setStandings] = useState([]);
   const [players, setPlayers] = useState([]);
@@ -229,30 +226,6 @@ const DordoyUltimate = () => {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1 }}
                 >
-                  <motion.button 
-                    whileHover={{ scale: 1.1, boxShadow: "0 0 20px rgba(234, 179, 8, 0.7)" }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setActiveView('matches')}
-                    className={`px-8 py-4 rounded-xl font-bold transition-all flex items-center text-lg ${activeView === 'matches' ? 'bg-yellow-500 text-gray-900 shadow-lg shadow-yellow-500/30' : 'bg-gray-800/80 text-white hover:bg-gray-700/90 backdrop-blur-sm'}`}
-                  >
-                    <GiSoccerBall className="mr-3 text-xl" /> Матчи
-                  </motion.button>
-                  <motion.button 
-                    whileHover={{ scale: 1.1, boxShadow: "0 0 20px rgba(234, 179, 8, 0.7)" }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setActiveView('table')}
-                    className={`px-8 py-4 rounded-xl font-bold transition-all flex items-center text-lg ${activeView === 'table' ? 'bg-yellow-500 text-gray-900 shadow-lg shadow-yellow-500/30' : 'bg-gray-800/80 text-white hover:bg-gray-700/90 backdrop-blur-sm'}`}
-                  >
-                    <IoStatsChart className="mr-3 text-xl" /> Таблица
-                  </motion.button>
-                  <motion.button 
-                    whileHover={{ scale: 1.1, boxShadow: "0 0 20px rgba(234, 179, 8, 0.7)" }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setActiveView('calendar')}
-                    className={`px-8 py-4 rounded-xl font-bold transition-all flex items-center text-lg ${activeView === 'calendar' ? 'bg-yellow-500 text-gray-900 shadow-lg shadow-yellow-500/30' : 'bg-gray-800/80 text-white hover:bg-gray-700/90 backdrop-blur-sm'}`}
-                  >
-                    <FiCalendar className="mr-3 text-xl" /> Календарь
-                  </motion.button>
                 </motion.div>
               </motion.div>
             </div>
@@ -276,6 +249,10 @@ const DordoyUltimate = () => {
         )}
       </AnimatePresence>
 
+      <MatchesView matches={matches} />
+      <TableView standings={standings} players={players} />
+      <CalendarView matches={matches} />
+
       {/* Floating Navigation */}
         <motion.div 
         className={`fixed top-4 left-0 right-0 z-50 px-4 transition-all ${heroVisible ? 'opacity-0 -translate-y-10' : 'opacity-100 translate-y-0'}`}
@@ -289,33 +266,6 @@ const DordoyUltimate = () => {
             <img src="https://via.placeholder.com/50/FFFF00/000000?text=DD" alt="Дордой" className="w-10 h-10 mr-3 rounded-full" />
             <span className="font-bold text-yellow-400 text-lg">ФК ДОРДОЙ</span>
           </motion.div>
-          
-          <div className="flex space-x-2">
-            <motion.button 
-              whileHover={{ scale: 1.1, backgroundColor: "rgba(234, 179, 8, 0.2)" }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setActiveView('matches')}
-              className={`p-2 rounded-full ${activeView === 'matches' ? 'bg-yellow-500 text-gray-900' : 'text-gray-300'}`}
-            >
-              <GiSoccerBall className="text-xl" />
-            </motion.button>
-            <motion.button 
-              whileHover={{ scale: 1.1, backgroundColor: "rgba(234, 179, 8, 0.2)" }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setActiveView('table')}
-              className={`p-2 rounded-full ${activeView === 'table' ? 'bg-yellow-500 text-gray-900' : 'text-gray-300'}`}
-            >
-              <IoStatsChart className="text-xl" />
-            </motion.button>
-            <motion.button 
-              whileHover={{ scale: 1.1, backgroundColor: "rgba(234, 179, 8, 0.2)" }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setActiveView('calendar')}
-              className={`p-2 rounded-full ${activeView === 'calendar' ? 'bg-yellow-500 text-gray-900' : 'text-gray-300'}`}
-            >
-              <FiCalendar className="text-xl" />
-            </motion.button>
-          </div>
           
           <motion.button 
             whileHover={{ scale: 1.05 }}
@@ -362,33 +312,6 @@ const DordoyUltimate = () => {
             >
               Загрузка данных...
             </motion.p>
-          </div>
-        )}
-
-        {/* Content */}
-        {!loading && (
-          <div className="container mx-auto px-4">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeView}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -50 }}
-                transition={{ duration: 0.7, type: "spring" }}
-              >
-                {activeView === 'matches' && (
-                  <MatchesView matches={matches} />
-                )}
-                
-                {activeView === 'table' && (
-                  <TableView standings={standings} players={players} />
-                )}
-                
-                {activeView === 'calendar' && (
-                  <CalendarView matches={matches} />
-                )}
-              </motion.div>
-            </AnimatePresence>
           </div>
         )}
       </div>

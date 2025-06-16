@@ -6,7 +6,7 @@ import Nav from './components/Home/Nav';
 import Count from './components/Home/Count';
 import Tab from './components/Home/Tab';
 import Hero from './components/Home/Trop';
-import About from './Pages/About';
+import About from './components/Home/About';
 import Team from './Pages/Team';
 import Matches from './Pages/Matches';
 import Gallery from './Pages/Gallery';
