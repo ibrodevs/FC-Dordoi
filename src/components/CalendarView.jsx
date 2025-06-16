@@ -1,12 +1,83 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiCalendar, FiClock, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiCalendar, FiClock, FiChevronLeft, FiChevronRight, FiBell, FiZap } from 'react-icons/fi';
+import { toast } from 'react-hot-toast';
 import MatchCard from './MatchCard';
 
-const CalendarView = ({ matches }) => {
-  const [selectedDate, setSelectedDate] = useState('2023-06-15');
-  const [month, setMonth] = useState(6);
-  const [year, setYear] = useState(2023);
+// Демо-матчи для разных дат
+const demoMatches = [
+  {
+    id: 1,
+    date: '2025-06-17',
+    time: '19:00',
+    homeTeam: 'Дордой',
+    awayTeam: 'Алга',
+    homeLogo: '/ФК_Дордой.png',
+    awayLogo: '/FK_Alga_Bishkek_Logo.svg.png',
+    league: 'РПЛ',
+    isLive: false,
+    homeScore: null,
+    awayScore: null
+  },
+  {
+    id: 2,
+    date: '2025-06-20',
+    time: '21:30',
+    homeTeam: 'Дордой',
+    awayTeam: 'Абдыш-Ата',
+    homeLogo: '/ФК_Дордой.png',
+    awayLogo: '/Эмблема_ФК_Абдыш-Ата.svg.png',
+    league: 'РПЛ',
+    isLive: false,
+    homeScore: null,
+    awayScore: null
+  },
+  {
+    id: 3,
+    date: '2025-06-27',
+    time: '18:00',
+    homeTeam: 'Дордой',
+    awayTeam: 'Нефтчи',
+    homeLogo: '/ФК_Дордой.png',
+    awayLogo: '/ФК_Нефтчи_(Кочкор-Ата).png',
+    league: 'РПЛ',
+    isLive: false,
+    homeScore: null,
+    awayScore: null
+  },
+  {
+    id: 4,
+    date: '2025-07-01',
+    time: '20:00',
+    homeTeam: 'Дордой',
+    awayTeam: 'Кара-Балта',
+    homeLogo: '/ФК_Дордой.png',
+    awayLogo: '/ФК_Кара-Балта.png',
+    league: 'РПЛ',
+    isLive: false,
+    homeScore: null,
+    awayScore: null
+  },
+  {
+    id: 5,
+    date: '2025-07-05',
+    time: '16:30',
+    homeTeam: 'Дордой',
+    awayTeam: 'Алай',
+    homeLogo: '/ФК_Дордой.png',
+    awayLogo: '/FC_Alay_Logo.png',
+    league: 'РПЛ',
+    isLive: false,
+    homeScore: null,
+    awayScore: null
+  }
+];
+
+const CalendarView = ({ matches = demoMatches }) => {
+  const today = new Date().toISOString().split('T')[0];
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear());
   const [direction, setDirection] = useState(0);
 
   const getDaysInMonth = (year, month) => {
@@ -78,8 +149,28 @@ const CalendarView = ({ matches }) => {
     }
   };
 
+  const handleReminder = () => {
+    toast.success(
+      <div>
+        <p className="font-medium">Мы уведомим вас о матчах!</p>
+        <p className="text-sm text-gray-200">Напоминание установлено на {new Date(selectedDate).toLocaleDateString('ru-RU')}</p>
+      </div>,
+      {
+        icon: <FiBell className="text-yellow-400" />,
+        style: {
+          background: '#1F2937',
+          color: '#fff',
+          border: '1px solid #374151',
+          borderRadius: '12px',
+          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)'
+        },
+        duration: 4000
+      }
+    );
+  };
+
   return (
-    <div className="relative">
+    <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Заголовок с анимацией */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
@@ -89,8 +180,14 @@ const CalendarView = ({ matches }) => {
         <motion.div
           animate={{ rotate: [0, 5, -5, 0] }}
           transition={{ duration: 8, repeat: Infinity }}
+          className="relative"
         >
           <FiCalendar className="text-3xl text-yellow-400 mr-3" />
+          <motion.span 
+            className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ repeat: Infinity, duration: 1.5 }}
+          />
         </motion.div>
         <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">
           Календарь матчей
@@ -101,9 +198,10 @@ const CalendarView = ({ matches }) => {
       <div className="flex justify-between items-center mb-6">
         <motion.button
           onClick={() => changeMonth(-1)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="p-2 rounded-full bg-gray-700 hover:bg-yellow-500 hover:text-gray-900 text-white transition-all"
+          whileHover={{ scale: 1.05, backgroundColor: '#4B5563' }}
+          whileTap={{ scale: 0.95 }}
+          className="p-2 rounded-xl bg-gray-700 text-white transition-all flex items-center justify-center w-12 h-12"
+          aria-label="Предыдущий месяц"
         >
           <FiChevronLeft className="text-xl" />
         </motion.button>
@@ -114,7 +212,7 @@ const CalendarView = ({ matches }) => {
             initial={{ opacity: 0, x: direction > 0 ? 30 : -30 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: direction > 0 ? -30 : 30 }}
-            className="text-xl font-bold text-yellow-400 px-4 py-2 bg-gray-700 rounded-lg"
+            className="text-xl font-bold text-yellow-400 px-6 py-3 bg-gray-700 rounded-xl flex items-center justify-center min-w-[200px] shadow-lg"
           >
             {monthNames[month - 1]} {year}
           </motion.div>
@@ -122,9 +220,10 @@ const CalendarView = ({ matches }) => {
         
         <motion.button
           onClick={() => changeMonth(1)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="p-2 rounded-full bg-gray-700 hover:bg-yellow-500 hover:text-gray-900 text-white transition-all"
+          whileHover={{ scale: 1.05, backgroundColor: '#4B5563' }}
+          whileTap={{ scale: 0.95 }}
+          className="p-2 rounded-xl bg-gray-700 text-white transition-all flex items-center justify-center w-12 h-12"
+          aria-label="Следующий месяц"
         >
           <FiChevronRight className="text-xl" />
         </motion.button>
@@ -135,11 +234,17 @@ const CalendarView = ({ matches }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8 border border-gray-700"
+        className="bg-gray-800 rounded-2xl shadow-xl overflow-hidden mb-8 border border-gray-700"
       >
-        <div className="grid grid-cols-7 bg-gray-700 text-gray-300 text-center font-medium py-3">
+        <div className="grid grid-cols-7 bg-gradient-to-r from-gray-700 to-gray-800 text-gray-300 text-center font-medium py-4">
           {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map(day => (
-            <div key={day} className="text-yellow-300">{day}</div>
+            <motion.div 
+              key={day} 
+              className="text-yellow-300 text-sm uppercase tracking-wider"
+              whileHover={{ scale: 1.1 }}
+            >
+              {day}
+            </motion.div>
           ))}
         </div>
         
@@ -147,13 +252,14 @@ const CalendarView = ({ matches }) => {
           {days.map(({ day, currentMonth, date }) => {
             const hasMatch = matchDates.includes(date);
             const isSelected = date === selectedDate;
-            const isToday = date === new Date().toISOString().split('T')[0];
+            const isToday = date === today;
+            const matchCount = matches.filter(m => m.date === date).length;
 
             return (
               <motion.div
                 key={`day-${date}`}
-                className={`h-14 flex flex-col items-center justify-center rounded-lg cursor-pointer relative transition-all
-                  ${isSelected ? 'bg-yellow-500 text-gray-900 font-bold shadow-md' :
+                className={`h-16 flex flex-col items-center justify-center rounded-xl cursor-pointer relative transition-all
+                  ${isSelected ? 'bg-gradient-to-br from-yellow-500 to-yellow-600 text-gray-900 font-bold shadow-lg' :
                     !currentMonth ? 'text-gray-600' :
                     hasMatch ? 'bg-gray-750 hover:bg-gray-700' : 'hover:bg-gray-700'}
                 `}
@@ -161,20 +267,25 @@ const CalendarView = ({ matches }) => {
                 whileHover={{ scale: currentMonth ? 1.05 : 1 }}
                 whileTap={{ scale: currentMonth ? 0.95 : 1 }}
               >
-                {isToday && (
+                {isToday && !isSelected && (
                   <motion.div
                     className="absolute top-1 right-1 w-2 h-2 rounded-full bg-blue-400"
                     animate={{ scale: [1, 1.3, 1] }}
                     transition={{ repeat: Infinity, duration: 2 }}
                   />
                 )}
-                <div>{day}</div>
+                <div className={`text-sm ${isSelected ? 'font-bold' : 'font-medium'}`}>{day}</div>
                 {hasMatch && (
-                  <motion.div
-                    className="w-2 h-2 rounded-full bg-yellow-400 mt-1"
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                  />
+                  <motion.div 
+                    className={`flex items-center justify-center mt-1 ${isSelected ? 'text-gray-900' : 'text-yellow-400'}`}
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                  >
+                    <FiZap className="text-xs" />
+                    {matchCount > 1 && (
+                      <span className="text-xs ml-0.5">{matchCount}</span>
+                    )}
+                  </motion.div>
                 )}
               </motion.div>
             );
@@ -187,12 +298,37 @@ const CalendarView = ({ matches }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="mb-4"
+        className="mb-8"
       >
-        <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
-          <FiClock className="mr-2 text-yellow-400 animate-pulse" />
-          Матчи на {new Date(selectedDate).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}
-        </h3>
+        <div className="flex items-center justify-between mb-6">
+          <motion.h3 
+            className="text-xl font-semibold text-white flex items-center"
+            initial={{ x: -10 }}
+            animate={{ x: 0 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
+            <motion.div
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="mr-2"
+            >
+              <FiClock className="text-yellow-400" />
+            </motion.div>
+            Матчи на {new Date(selectedDate).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}
+          </motion.h3>
+          
+          {matches.filter(m => m.date === selectedDate).length === 0 && (
+            <motion.button
+              onClick={handleReminder}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center px-4 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 font-medium rounded-xl transition-all text-sm shadow-lg"
+            >
+              <FiBell className="mr-2" />
+              Напомнить
+            </motion.button>
+          )}
+        </div>
         
         <AnimatePresence mode="wait">
           {matches.filter(m => m.date === selectedDate).length > 0 ? (
@@ -201,16 +337,20 @@ const CalendarView = ({ matches }) => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
-              className="grid gap-6"
+              className="grid gap-4"
             >
               {matches.filter(m => m.date === selectedDate).map((match, index) => (
                 <motion.div
                   key={match.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.1, type: 'spring', stiffness: 200 }}
                 >
-                  <MatchCard match={match} activeTab="upcoming" />
+                  <MatchCard 
+                    match={match} 
+                    activeTab="upcoming"
+                    glow={index % 2 === 0 ? 'from-blue-500/20' : 'from-yellow-500/20'}
+                  />
                 </motion.div>
               ))}
             </motion.div>
@@ -220,15 +360,25 @@ const CalendarView = ({ matches }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="py-8 text-center bg-gray-800 rounded-lg border border-gray-700"
+              className="py-12 text-center bg-gray-800 rounded-2xl border-2 border-dashed border-gray-700"
             >
-              <p className="text-gray-400 mb-4">На выбранную дату матчей нет</p>
+              <div className="mb-6 flex justify-center">
+                <motion.div
+                  animate={{ scale: [1, 1.05, 1], rotate: [0, 5, -5, 0] }}
+                  transition={{ repeat: Infinity, duration: 3 }}
+                >
+                  <FiClock className="text-4xl text-gray-500" />
+                </motion.div>
+              </div>
+              <p className="text-gray-400 mb-2">На выбранную дату матчей нет</p>
+              <p className="text-sm text-gray-500 mb-6">Попробуйте выбрать другую дату</p>
               <motion.button
+                onClick={() => setSelectedDate(today)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-medium rounded-lg transition-all"
+                className="px-6 py-2 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-medium rounded-xl transition-all text-sm shadow-lg border border-gray-600"
               >
-                Установить напоминание
+                Сегодня
               </motion.button>
             </motion.div>
           )}
