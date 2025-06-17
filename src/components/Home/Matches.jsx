@@ -15,18 +15,6 @@ const DordoyUltimate = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const containerRef = useRef(null);
   
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  });
-  
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const y = useTransform(scrollYProgress, [0, 1], [0, -200]);
-  
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (latest > 0.6) setHeroVisible(false);
-    else setHeroVisible(true);
-  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -171,16 +159,16 @@ const DordoyUltimate = () => {
   {heroVisible && (
     <motion.div 
       className="relative h-screen overflow-hidden bg-gray-900"
-      style={{ opacity, y }}
       exit={{ opacity: 0 }}
     >
       {/* Глубокий темный фон с анимированными тенями */}
       <motion.div 
-        className="absolute inset-0 bg-gradient-to-b from-black via-gray-900/95 to-black z-0"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5 }}
-      />
+  className="absolute inset-0 bg-gradient-to-b from-black via-gray-900/95 to-black z-0"
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1.5 }}
+>
+</motion.div>
+
 
       {/* Динамичное параллакс-изображение с затемнением */}
       <motion.img 
@@ -346,16 +334,16 @@ const DordoyUltimate = () => {
         }}
       >
         <motion.div
-  animate={{ 
-    y: [0, 15, 0],
-    scale: [1, 1.2, 1],
-  }}
-  transition={{ 
-    repeat: Infinity, 
-    duration: 2,
-    ease: "easeInOut",
-  }}
->
+          animate={{ 
+            y: [0, 15, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{ 
+            repeat: Infinity, 
+            duration: 2,
+            ease: "easeInOut",
+          }}
+        >
           <svg 
             className="w-12 h-12 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]" 
             fill="none" 
@@ -375,7 +363,6 @@ const DordoyUltimate = () => {
     </motion.div>
   )}
 </AnimatePresence>
-  
 
       <MatchesView matches={matches} />
       <TableView standings={standings} players={players} />
