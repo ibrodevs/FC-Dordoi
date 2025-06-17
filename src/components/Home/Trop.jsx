@@ -650,163 +650,148 @@ const TrophySection = () => {
         )}
       </div>
 
-      {/* Эпичное модальное окно с деталями трофея */}
-      <AnimatePresence>
-        {selectedTrophy && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
-            onClick={() => setSelectedTrophy(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.7, y: 100, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.7, y: 100, opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-6xl bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl overflow-hidden shadow-3xl border border-yellow-400/20"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Кнопка закрытия с анимацией */}
-              <motion.button 
-                className="absolute top-6 right-6 z-20 w-12 h-12 bg-blue-900/80 hover:bg-blue-800 rounded-full flex items-center justify-center backdrop-blur-sm shadow-lg border border-yellow-400/30"
-                onClick={() => setSelectedTrophy(null)}
-                whileHover={{ rotate: 90, scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
-                <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </motion.button>
-              
-              {/* Контент */}
-              <div className="lg:flex">
-                {/* Левая часть - изображение и видео */}
-                <div className="lg:w-1/2 p-8 lg:p-12 relative">
-                  {/* Лента с годом */}
-                  <div className="absolute top-8 left-8 z-10 px-4 py-2 bg-yellow-400 text-blue-900 font-bold rounded-r-lg shadow-md">
-                    {selectedTrophy.year}
-                  </div>
-                  
-                  {/* Изображение трофея с эффектом свечения */}
-                  <div className="relative h-96 lg:h-[500px] mb-8 flex items-center justify-center">
-                    <img 
-                      src={selectedTrophy.image} 
-                      alt={selectedTrophy.title}
-                      className="w-full h-full object-contain z-10 relative"
-                    />
-                    <div className="absolute inset-0 bg-yellow-400/10 rounded-full blur-xl animate-pulse"></div>
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50"></div>
-                  </div>
-                  
-                  {/* Видео-хайлайты */}
-                  {selectedTrophy.videoHighlight && (
-                    <div className="rounded-xl overflow-hidden shadow-2xl border border-yellow-400/20">
-                      <div className="bg-black py-3 px-4 flex items-center">
-                        <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
-                        <div className="w-3 h-3 bg-yellow-400 rounded-full mr-2"></div>
-                        <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                        <span className="text-yellow-400 text-sm font-medium">ТУРНИРНЫЕ ХАЙЛАЙТЫ</span>
-                      </div>
-                      <iframe
-                        src={selectedTrophy.videoHighlight}
-                        className="w-full h-48 lg:h-64"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      ></iframe>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Правая часть - информация */}
-                <div className="lg:w-1/2 p-8 lg:p-12 bg-gradient-to-b from-gray-800/50 to-gray-900/80">
-                  <div className="mb-8">
-                    <h2 className="text-4xl font-bold text-yellow-400 mb-4">
-                      {selectedTrophy.title} <span className="text-white">{selectedTrophy.year}</span>
-                    </h2>
-                    
-                    {/* Категория */}
-                    <div className="inline-block px-3 py-1 bg-blue-900/80 text-yellow-400 text-sm font-bold rounded-full mb-6">
-                      {categories.find(c => c.id === selectedTrophy.category)?.name}
-                    </div>
-                    
-                    {/* Основное описание */}
-                    <p className="text-gray-300 mb-6 leading-relaxed">
-                      {selectedTrophy.description}
-                    </p>
-                    
-                    {/* Особое достижение */}
-                    {selectedTrophy.highlight && (
-                      <div className="flex items-start mb-6">
-                        <div className="text-2xl mr-3 text-yellow-400">✨</div>
-                        <p className="text-yellow-300 font-medium flex-1">
-                          <span className="font-bold">Исторический факт:</span> {selectedTrophy.highlight}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Статистика с анимацией появления */}
-                  <motion.div 
-                    className="mb-10"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                  >
-                    <h3 className="text-2xl font-bold text-white mb-6 flex items-center">
-                      <svg className="w-6 h-6 text-yellow-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                      </svg>
-                      СТАТИСТИКА ТУРНИРА
-                    </h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {Object.entries(selectedTrophy.stats).map(([key, value]) => (
-                        <motion.div 
-                          key={key}
-                          className="bg-gray-800/50 rounded-lg p-4 shadow-sm border border-gray-700 hover:border-yellow-400/30 transition-all"
-                          whileHover={{ y: -5 }}
-                        >
-                          <p className="text-gray-400 text-sm uppercase mb-1">
-                            {key === 'matches' ? 'Матчи' : 
-                             key === 'wins' ? 'Победы' : 
-                             key === 'draws' ? 'Ничьи' : 
-                             key === 'losses' ? 'Поражения' : 
-                             key === 'goals' ? 'Голы' : 
-                             key === 'bestPlayer' ? 'Лучший игрок' : 
-                             key === 'topScorer' ? 'Лучший бомбардир' :
-key === 'cleanSheets' ? 'Сухие матчи' : key}
-</p>
-<p className="text-white font-bold">
-{value}
-</p>
-</motion.div>
-))}
-</div>
-</motion.div>
-
-              {/* Кнопка закрытия */}
-              <motion.button
-                className="w-full py-4 bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold rounded-lg flex items-center justify-center gap-2 transition-all"
-                onClick={() => setSelectedTrophy(null)}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-                Закрыть
-              </motion.button>
+      {/* Модальное окно с деталями трофея (оптимальный размер) */}
+<AnimatePresence>
+  {selectedTrophy && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+      onClick={() => setSelectedTrophy(null)}
+    >
+      <motion.div
+        initial={{ scale: 0.95, y: 30, opacity: 0 }}
+        animate={{ scale: 1, y: 0, opacity: 1 }}
+        exit={{ scale: 0.95, y: 30, opacity: 0 }}
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        className="relative w-full max-w-4xl bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl overflow-hidden shadow-3xl border border-yellow-400/30"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Кнопка закрытия */}
+        <motion.button 
+          className="absolute top-4 right-4 z-20 w-10 h-10 bg-blue-900/80 hover:bg-blue-800 rounded-full flex items-center justify-center backdrop-blur-sm shadow-lg border border-yellow-400/30"
+          onClick={() => setSelectedTrophy(null)}
+          whileHover={{ rotate: 90, scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </motion.button>
+        
+        {/* Контент */}
+        <div className="flex flex-col lg:flex-row">
+          {/* Левая часть - изображение */}
+          <div className="lg:w-2/5 p-6 relative">
+            {/* Лента с годом */}
+            <div className="absolute top-6 left-6 z-10 px-4 py-1 bg-yellow-400 text-blue-900 font-bold rounded-r-lg shadow">
+              {selectedTrophy.year}
             </div>
+            
+            {/* Изображение трофея */}
+            <div className="relative h-64 lg:h-80 flex items-center justify-center">
+              <img 
+                src={selectedTrophy.image} 
+                alt={selectedTrophy.title}
+                className="h-full object-contain z-10 relative"
+              />
+              <div className="absolute inset-0 bg-yellow-400/10 rounded-full blur-md"></div>
+            </div>
+            
+            {/* Видео-хайлайты (если есть) */}
+            {selectedTrophy.videoHighlight && (
+              <div className="mt-4 rounded-lg overflow-hidden border border-yellow-400/20">
+                <div className="bg-black py-2 px-3 flex items-center">
+                  <div className="flex space-x-1 mr-2">
+                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  </div>
+                  <span className="text-yellow-400 text-xs font-medium">ХАЙЛАЙТЫ</span>
+                </div>
+                <iframe
+                  src={selectedTrophy.videoHighlight}
+                  className="w-full h-32"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            )}
           </div>
-        </motion.div>
+          
+          {/* Правая часть - информация */}
+          <div className="lg:w-3/5 p-6 lg:p-8 bg-gradient-to-b from-gray-800/50 to-gray-900/80">
+            <div className="mb-6">
+              <h2 className="text-2xl lg:text-3xl font-bold text-yellow-400 mb-2">
+                {selectedTrophy.title}
+              </h2>
+              
+              <div className="inline-block px-3 py-1 bg-blue-900/50 text-yellow-400 text-sm font-bold rounded-full mb-4">
+                {categories.find(c => c.id === selectedTrophy.category)?.name}
+              </div>
+              
+              <p className="text-gray-300 mb-4 text-sm lg:text-base">
+                {selectedTrophy.description}
+              </p>
+              
+              {selectedTrophy.highlight && (
+                <div className="flex items-start mb-4 bg-yellow-400/10 rounded-lg p-3 border border-yellow-400/20">
+                  <div className="text-lg mr-2 text-yellow-400">✨</div>
+                  <p className="text-yellow-300 text-sm">
+                    <span className="font-bold">Исторический факт:</span> {selectedTrophy.highlight}
+                  </p>
+                </div>
+              )}
+            </div>
+            
+            {/* Статистика */}
+            <div className="mb-6">
+              <h3 className="text-lg font-bold text-white mb-3 flex items-center">
+                <svg className="w-5 h-5 text-yellow-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                СТАТИСТИКА ТУРНИРА
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {Object.entries(selectedTrophy.stats).map(([key, value]) => (
+                  <div 
+                    key={key}
+                    className="bg-gray-800/50 rounded-lg p-3 text-sm border border-gray-700 hover:border-yellow-400/30 transition-colors"
+                  >
+                    <p className="text-gray-400 uppercase mb-1 text-xs">
+                      {key === 'matches' ? 'Матчи' : 
+                       key === 'wins' ? 'Победы' : 
+                       key === 'draws' ? 'Ничьи' : 
+                       key === 'losses' ? 'Поражения' : 
+                       key === 'goals' ? 'Голы' : 
+                       key === 'bestPlayer' ? 'Лучший игрок' : 
+                       key === 'topScorer' ? 'Бомбардир' :
+                       key === 'cleanSheets' ? 'Сухие матчи' : key}
+                    </p>
+                    <p className="text-white font-medium">{value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Кнопка закрытия */}
+            <button
+              className="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold rounded-lg transition-all flex items-center justify-center gap-2"
+              onClick={() => setSelectedTrophy(null)}
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              Закрыть
+            </button>
+          </div>
+        </div>
       </motion.div>
-    )}
-  </AnimatePresence>
+    </motion.div>
+  )}
+</AnimatePresence>
 </section>
 );
 };

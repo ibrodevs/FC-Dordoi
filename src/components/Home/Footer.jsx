@@ -99,12 +99,11 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-6 text-yellow-400">Быстрые ссылки</h3>
             <ul className="space-y-3">
               {[
-                { name: 'Новости', href: '#' },
-                { name: 'Матчи', href: '#' },
-                { name: 'Таблица', href: '#' },
-                { name: 'Игроки', href: '#' },
-                { name: 'Галерея', href: '#' },
-                { name: 'История клуба', href: '#' }
+                { name: 'Матчи', href: '/matches' },
+                { name: 'Таблица', href: '/matches' },
+                { name: 'Игроки', href: '/team' },
+                { name: 'Галерея', href: '/gallery' },
+                { name: 'История клуба', href: '/about' }
               ].map((link, index) => (
                 <motion.li 
                   key={index}
@@ -142,7 +141,7 @@ const Footer = () => {
               <motion.a
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                href="#"
+                href="https://kassir.kg/ru/category/sport"
                 className="inline-flex items-center px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold rounded-lg transition-colors shadow-lg"
               >
                 <FaTicketAlt className="mr-2" />
@@ -191,7 +190,6 @@ const Footer = () => {
           <div className="flex space-x-6">
             <a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">Политика конфиденциальности</a>
             <a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">Условия использования</a>
-            <a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">Карта сайта</a>
           </div>
         </motion.div>
       </motion.div>

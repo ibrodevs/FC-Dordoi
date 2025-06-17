@@ -165,84 +165,217 @@ const DordoyUltimate = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white overflow-x-hidden" ref={containerRef}>
+      {/* Hero Section */}
 
-      {/* Hero Section with Parallax */}
       <AnimatePresence>
-        {heroVisible && (
-          <motion.div 
-            className="relative h-screen overflow-hidden"
-            style={{ opacity, y }}
-            exit={{ opacity: 0 }}
+  {heroVisible && (
+    <motion.div 
+      className="relative h-screen overflow-hidden bg-gray-900"
+      style={{ opacity, y }}
+      exit={{ opacity: 0 }}
+    >
+      {/* Глубокий темный фон с анимированными тенями */}
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-b from-black via-gray-900/95 to-black z-0"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5 }}
+      />
+
+      {/* Динамичное параллакс-изображение с затемнением */}
+      <motion.img 
+        src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80"
+        alt="ФК Дордой"
+        className="absolute inset-0 w-full h-full object-cover opacity-50"
+        initial={{ scale: 1.8, opacity: 0 }}
+        animate={{ 
+          scale: 1.2,
+          opacity: 0.5,
+          transition: { 
+            duration: 3,
+            ease: [0.2, 0.85, 0.4, 1] 
+          }
+        }}
+      />
+
+      {/* **ЭПИЧНЫЙ НЕОНОВЫЙ ТЕКСТ** */}
+      <div className="absolute inset-0 flex items-center justify-center z-20">
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ 
+            opacity: 1, 
+            y: 0,
+            transition: {
+              duration: 1.5,
+              delay: 0.5,
+              type: "spring",
+              bounce: 0.4
+            }
+          }}
+          className="text-center px-4"
+        >
+          {/* Главный заголовок с неоновым свечением */}
+          <motion.h1 
+            className="text-6xl md:text-8xl lg:text-9xl font-extrabold mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              textShadow: [
+                "0 0 8px rgba(255, 225, 0, 0.3)",
+                "0 0 16px rgba(255, 200, 0, 0.6)",
+                "0 0 24px rgba(255, 175, 0, 0.4)",
+                "0 0 8px rgba(255, 225, 0, 0.3)",
+              ],
+              backgroundPosition: ["0% 50%", "100% 50%"],
+            }}
+            transition={{
+              opacity: { duration: 1, delay: 0.7 },
+              y: { duration: 1.2, delay: 0.7, type: "spring" },
+              textShadow: {
+                duration: 4,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "linear",
+              },
+              backgroundPosition: {
+                duration: 8,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "linear",
+              },
+            }}
+            style={{
+              backgroundSize: "300% 300%",
+            }}
           >
-            <motion.div 
-              className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90 z-10"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.9 }}
-              transition={{ duration: 1.5 }}
-            />
-            
-            <motion.img 
-              src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80"
-              alt="ФК Дордой"
-              className="absolute inset-0 w-full h-full object-cover"
-              initial={{ scale: 1.4 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 2, ease: "easeOut" }}
-            />
-            
-            <div className="absolute inset-0 flex items-center justify-center z-20">
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.5, type: "spring" }}
-                className="text-center px-4"
-              >
-                <motion.h1 
-                  className="text-5xl md:text-7xl lg:text-8xl font-bold mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600"
-                  animate={{
-                    backgroundPosition: ['0% 50%', '100% 50%'],
-                  }}
-                  transition={{
-                    duration: 6,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                    ease: "linear",
-                  }}
-                  style={{
-                    backgroundSize: '200% 200%',
-                  }}
-                >
-                  ФК ДОРДОЙ
-                </motion.h1>
-                <motion.p 
-                  className="text-xl md:text-3xl lg:text-4xl font-semibold mb-6 md:mb-8 text-gray-300"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.8 }}
-                >
-                  Легенды кыргызского футбола
-                </motion.p>
-              </motion.div>
-            </div>
-            
-            <motion.div 
-              className="absolute bottom-10 left-0 right-0 flex justify-center z-20"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
+            ФК <span className="text-yellow-300">ДОРДОЙ</span>
+          </motion.h1>
+
+          {/* Подзаголовок с "тикером" */}
+          <motion.p 
+            className="text-2xl md:text-4xl lg:text-5xl font-bold mb-8 text-gray-200"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ 
+              opacity: 1, 
+              y: 0,
+              transition: { 
+                delay: 1.2,
+                duration: 1,
+                type: "spring",
+              }
+            }}
+          >
+            <motion.span
+              animate={{
+                color: ["#fbbf24", "#f59e0b", "#fbbf24"],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
             >
-              <motion.div
-                animate={{ y: [0, 15, 0] }}
-                transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-              >
-                <svg className="w-10 h-10 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              ЛЕГЕНДЫ КЫРГЫЗСКОГО ФУТБОЛА
+            </motion.span>
+          </motion.p>
+
+          {/* Кнопка с "электрическим" эффектом */}
+          <motion.button
+            className="px-10 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-bold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ 
+              opacity: 1, 
+              scale: 1,
+              transition: {
+                delay: 1.5,
+                duration: 0.8,
+                type: "spring",
+              }
+            }}
+            whileHover={{ 
+              scale: 1.05,
+              background: "linear-gradient(to right, #f59e0b, #fcd34d, #f59e0b)",
+            }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="relative z-10">СТАТЬ ЧАСТЬЮ КОМАНДЫ</span>
+            <motion.span
+              className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-500 opacity-0 hover:opacity-100 transition-opacity duration-300"
+              animate={{
+                x: [-100, 100],
+                opacity: [0, 0.4, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            />
+          </motion.button>
+        </motion.div>
+      </div>
+
+      {/* Анимированные "вспышки" для кинематографичности */}
+      {[...Array(3)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute inset-0 bg-yellow-400/10 pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: [0, 0.1, 0],
+            x: `${Math.random() * 100 - 50}px`,
+            y: `${Math.random() * 100 - 50}px`,
+          }}
+          transition={{
+            duration: 8,
+            delay: Math.random() * 5,
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+        />
+      ))}
+
+      {/* Анимированный скролл-индикатор (пульсирующий) */}
+      <motion.div 
+        className="absolute bottom-8 left-0 right-0 flex justify-center z-20"
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: 1,
+          transition: { delay: 2 }
+        }}
+      >
+        <motion.div
+  animate={{ 
+    y: [0, 15, 0],
+    scale: [1, 1.2, 1],
+  }}
+  transition={{ 
+    repeat: Infinity, 
+    duration: 2,
+    ease: "easeInOut",
+  }}
+>
+          <svg 
+            className="w-12 h-12 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M19 14l-7 7m0 0l-7-7m7 7V3" 
+            />
+          </svg>
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+  
 
       <MatchesView matches={matches} />
       <TableView standings={standings} players={players} />

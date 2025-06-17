@@ -20,6 +20,11 @@ const DordoiNav = () => {
     { path: "/contacts", name: "Контакты", color: "blue" },
   ];
 
+  // Эффект для прокрутки вверх при изменении маршрута
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   // Эффект для отслеживания скролла
   useEffect(() => {
     const handleScroll = () => {
@@ -65,11 +70,13 @@ const DordoiNav = () => {
   const handleNavClick = (index) => {
     setActiveItem(index);
     setIsMobileMenuOpen(false);
+    // Дополнительная прокрутка вверх при клике
+    window.scrollTo(0, 0);
   };
 
   return (
     <div className={`w-full py-3 px-4 fixed top-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-blue-800/90 backdrop-blur-md shadow-md' : 'bg-transparent'
+      isScrolled ? 'bg-white/10 backdrop-blur-md shadow-md' : 'bg-transparent'
     }`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Логотип */}
@@ -83,11 +90,9 @@ const DordoiNav = () => {
             alt="FC Dordoi Logo" 
             className="h-10 w-auto mr-2"
           />
-         <span className="hidden sm:block text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-blue-600">
-  ФК ДОРДОЙ
-</span>
-
-
+          <span className="hidden sm:block text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-blue-600">
+            ФК ДОРДОЙ
+          </span>
         </Link>
 
         {/* Кнопка мобильного меню */}
@@ -102,8 +107,8 @@ const DordoiNav = () => {
         <nav 
           ref={navRef}
           className={`ml-100 relative ${isMobileMenuOpen 
-            ? 'fixed top-16 left-0 right-0 bg-blue-700 z-50 py-4 shadow-lg' 
-            : 'hidden sm:flex'} items-center bg-blue-700 sm:bg-opacity-90 backdrop-blur-sm px-4 rounded-xl`}
+            ? 'fixed top-16 left-0 right-0 bg-blue-700/90 z-50 py-4 shadow-lg backdrop-blur-md' 
+            : 'hidden sm:flex'} items-center bg-blue-700/90 backdrop-blur-sm px-4 rounded-xl`}
         >
           {menuItems.map((item, index) => (
             <Link

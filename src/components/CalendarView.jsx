@@ -80,6 +80,7 @@ const CalendarView = ({ matches = demoMatches }) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [direction, setDirection] = useState(0);
 
+  // Функция для получения дней месяца с правильным форматированием дат
   const getDaysInMonth = (year, month) => {
     const date = new Date(year, month - 1, 1);
     const days = [];
@@ -87,42 +88,63 @@ const CalendarView = ({ matches = demoMatches }) => {
     date.setDate(0);
     const prevMonthDays = date.getDate();
 
+    // Дни предыдущего месяца
     for (let i = startDay - 1; i >= 0; i--) {
+      const dayDate = new Date(year, month - 2, prevMonthDays - i);
       days.push({
         day: prevMonthDays - i,
         currentMonth: false,
-        date: new Date(year, month - 2, prevMonthDays - i).toISOString().split('T')[0]
+        date: formatDate(dayDate)
       });
     }
 
+    // Дни текущего месяца
     date.setMonth(month - 1);
     date.setDate(1);
     const daysCount = new Date(year, month, 0).getDate();
 
     for (let i = 1; i <= daysCount; i++) {
+      const dayDate = new Date(year, month - 1, i);
       days.push({
         day: i,
         currentMonth: true,
-        date: new Date(year, month - 1, i).toISOString().split('T')[0]
+        date: formatDate(dayDate)
       });
     }
 
+    // Дни следующего месяца
     const totalCells = Math.ceil(days.length / 7) * 7;
     const nextMonthDays = totalCells - days.length;
 
     for (let i = 1; i <= nextMonthDays; i++) {
+      const dayDate = new Date(year, month, i);
       days.push({
         day: i,
         currentMonth: false,
-        date: new Date(year, month, i).toISOString().split('T')[0]
+        date: formatDate(dayDate)
       });
     }
 
     return days;
   };
 
+  // Форматирование даты в YYYY-MM-DD
+  const formatDate = (date) => {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+  };
+
   const days = getDaysInMonth(year, month);
-  const matchDates = matches.map(m => m.date);
+  
+  // Создаем Set с датами матчей для быстрой проверки
+  const matchDatesSet = new Set(matches.map(m => m.date));
 
   const monthNames = [
     'Январь', 'Февраль', 'Март', 'Апрель', 
@@ -168,6 +190,14 @@ const CalendarView = ({ matches = demoMatches }) => {
       }
     );
   };
+
+  // Получаем матчи для выбранной даты
+  const selectedDateMatches = matches.filter(m => m.date === selectedDate);
+  // Количество матчей для каждой даты
+  const matchCountByDate = matches.reduce((acc, match) => {
+    acc[match.date] = (acc[match.date] || 0) + 1;
+    return acc;
+  }, {});
 
   return (
     <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -250,10 +280,10 @@ const CalendarView = ({ matches = demoMatches }) => {
         
         <div className="grid grid-cols-7 gap-1 p-2">
           {days.map(({ day, currentMonth, date }) => {
-            const hasMatch = matchDates.includes(date);
+            const hasMatch = matchDatesSet.has(date);
             const isSelected = date === selectedDate;
             const isToday = date === today;
-            const matchCount = matches.filter(m => m.date === date).length;
+            const matchCount = matchCountByDate[date] || 0;
 
             return (
               <motion.div
@@ -317,7 +347,7 @@ const CalendarView = ({ matches = demoMatches }) => {
             Матчи на {new Date(selectedDate).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}
           </motion.h3>
           
-          {matches.filter(m => m.date === selectedDate).length === 0 && (
+          {selectedDateMatches.length === 0 && (
             <motion.button
               onClick={handleReminder}
               whileHover={{ scale: 1.05 }}
@@ -331,7 +361,7 @@ const CalendarView = ({ matches = demoMatches }) => {
         </div>
         
         <AnimatePresence mode="wait">
-          {matches.filter(m => m.date === selectedDate).length > 0 ? (
+          {selectedDateMatches.length > 0 ? (
             <motion.div
               key={`matches-${selectedDate}`}
               initial={{ opacity: 0, y: 10 }}
@@ -339,7 +369,7 @@ const CalendarView = ({ matches = demoMatches }) => {
               exit={{ opacity: 0, y: 10 }}
               className="grid gap-4"
             >
-              {matches.filter(m => m.date === selectedDate).map((match, index) => (
+              {selectedDateMatches.map((match, index) => (
                 <motion.div
                   key={match.id}
                   initial={{ opacity: 0, y: 20 }}

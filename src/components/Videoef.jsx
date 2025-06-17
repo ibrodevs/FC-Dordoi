@@ -117,11 +117,6 @@ function ClubInfo() {
                 </div>
               </div>
             </div>
-
-            {/* Кнопка */}
-            <button className="mt-6 px-8 py-3 bg-yellow-400 text-blue-900 font-bold rounded-lg hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl w-full md:w-auto">
-              Узнать больше о клубе →
-            </button>
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@ const GalleryPage = () => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [likedImages, setLikedImages] = useState(new Set());
   const [isHovered, setIsHovered] = useState(null);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   // Данные галереи с более разнообразными изображениями
   const galleryData = [
@@ -179,10 +180,76 @@ const GalleryPage = () => {
     setIsZoomed(false);
   };
 
+  // Функция для скачивания изображения
+  const downloadImage = async () => {
+    if (!selectedImage) return;
+    
+    try {
+      const response = await fetch(selectedImage.imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `dordoi-${selectedImage.title.toLowerCase().replace(/\s+/g, '-')}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Ошибка при скачивании:', error);
+      alert('Не удалось скачать изображение');
+    }
+  };
+
+  // Функция для открытия модального окна "Поделиться"
+  const openShareModal = () => {
+    setIsShareModalOpen(true);
+  };
+
+  // Функция для закрытия модального окна "Поделиться"
+  const closeShareModal = () => {
+    setIsShareModalOpen(false);
+  };
+
+  // Функция для копирования ссылки
+  const copyToClipboard = () => {
+    if (!selectedImage) return;
+    
+    navigator.clipboard.writeText(selectedImage.imageUrl)
+      .then(() => {
+        alert('Ссылка скопирована в буфер обмена!');
+        closeShareModal();
+      })
+      .catch(err => {
+        console.error('Ошибка при копировании:', err);
+        alert('Не удалось скопировать ссылку');
+      });
+  };
+
+  // Функция для шаринга через нативные API (если поддерживается)
+  const nativeShare = async () => {
+    if (!selectedImage) return;
+    
+    try {
+      await navigator.share({
+        title: selectedImage.title,
+        text: selectedImage.description,
+        url: selectedImage.imageUrl,
+      });
+    } catch (err) {
+      console.log('Нативный шаринг не поддерживается, открываю модалку');
+      openShareModal();
+    }
+  };
+
   // Эффект для закрытия по ESC
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') closeImage();
+      if (e.key === 'Escape') {
+        closeImage();
+        closeShareModal();
+      }
       if (e.key === 'ArrowLeft') navigateImage('prev');
       if (e.key === 'ArrowRight') navigateImage('next');
     };
@@ -360,7 +427,7 @@ const GalleryPage = () => {
                   <motion.div
                     key={item.id}
                     layout
-                    custom={index % 4} // Для staggered animation
+                    custom={index % 4}
                     initial="hidden"
                     animate="visible"
                     whileHover="hover"
@@ -620,6 +687,10 @@ const GalleryPage = () => {
                         className="flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium transition-colors flex-1"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          downloadImage();
+                        }}
                       >
                         <FiDownload className="mr-2" />
                         Скачать
@@ -628,6 +699,14 @@ const GalleryPage = () => {
                         className="flex items-center justify-center px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white font-medium transition-colors"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (navigator.share) {
+                            nativeShare();
+                          } else {
+                            openShareModal();
+                          }
+                        }}
                       >
                         <FiShare2 />
                       </motion.button>
@@ -639,6 +718,92 @@ const GalleryPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Модальное окно "Поделиться" */}
+      <AnimatePresence>
+        {isShareModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
+            onClick={closeShareModal}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-gray-800 rounded-xl p-6 max-w-md w-full relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-xl font-bold text-white mb-4">Поделиться изображением</h3>
+              
+              <div className="space-y-4">
+                <div className="flex space-x-2 overflow-x-auto pb-2">
+                  {/* Кнопки социальных сетей */}
+                  <motion.a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(selectedImage?.imageUrl || '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Facebook
+                  </motion.a>
+                  <motion.a
+                    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(selectedImage?.imageUrl || '')}&text=${encodeURIComponent(selectedImage?.title || '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center px-4 py-2 bg-blue-400 hover:bg-blue-500 rounded-lg text-white font-medium transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Twitter
+                  </motion.a>
+                  <motion.a
+                    href={`https://vk.com/share.php?url=${encodeURIComponent(selectedImage?.imageUrl || '')}&title=${encodeURIComponent(selectedImage?.title || '')}&description=${encodeURIComponent(selectedImage?.description || '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center px-4 py-2 bg-blue-800 hover:bg-blue-900 rounded-lg text-white font-medium transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    ВКонтакте
+                  </motion.a>
+                </div>
+                
+                <div className="flex items-center bg-gray-700 rounded-lg overflow-hidden">
+                  <input
+                    type="text"
+                    readOnly
+                    value={selectedImage?.imageUrl || ''}
+                    className="flex-1 bg-transparent border-none px-4 py-2 text-white text-sm truncate"
+                  />
+                  <motion.button
+                    onClick={copyToClipboard}
+                    className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-medium transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Копировать
+                  </motion.button>
+                </div>
+              </div>
+              
+              <motion.button
+                onClick={closeShareModal}
+                className="absolute top-4 right-4 p-1 rounded-full hover:bg-gray-700 transition-colors text-gray-400"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <FiX className="h-6 w-6" />
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Футер */}
       <Footer />
     </div>

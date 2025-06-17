@@ -421,40 +421,6 @@ const Contacts = () => {
           </div>
         </div>
         
-        {/* CTA Section */}
-        <div className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-900/80 to-blue-800/80">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                Станьте частью нашей футбольной семьи!
-              </h3>
-              <p className="text-xl text-blue-100 mb-8">
-                Подпишитесь на рассылку, чтобы получать последние новости, эксклюзивные предложения и информацию о предстоящих матчах.
-              </p>
-              <div className="max-w-md mx-auto">
-                <div className="flex">
-                  <input
-                    type="email"
-                    placeholder="Ваш email"
-                    className="flex-grow px-4 py-3 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900"
-                  />
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-r-lg text-white font-bold shadow-lg hover:shadow-yellow-500/30 transition-all"
-                  >
-                    Подписаться
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
       </div>
     </>
   );
