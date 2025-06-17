@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
-import { FiCalendar, FiShoppingCart } from 'react-icons/fi';
+import { FiArrowUp, FiCalendar } from 'react-icons/fi';
 import { RiLiveFill } from 'react-icons/ri';
 import MatchesView from '../MatchesView';
 import TableView from '../TableView';
@@ -12,6 +12,7 @@ const DordoyUltimate = () => {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [heroVisible, setHeroVisible] = useState(true);
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const containerRef = useRef(null);
   
   const { scrollYProgress } = useScroll({
@@ -28,12 +29,32 @@ const DordoyUltimate = () => {
   });
 
   useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollButton(true);
+      } else {
+        setShowScrollButton(false);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         await new Promise(resolve => setTimeout(resolve, 1800));
         
         const mockMatches = [
-           {
+          {
             id: 1,
             date: '2023-06-15',
             time: '18:00',
@@ -44,7 +65,7 @@ const DordoyUltimate = () => {
             awayScore: null,
             venue: 'Стадион Дордой, Бишкек',
             status: 'upcoming',
-            competitionLogo: 'https://via.placeholder.com/50/FFFF00/000000?text=PL',
+            competitionLogo: 'https://s.scr365.net/s1/logo/24_84_18/f56bGaRk_200_1299.png',
             highlights: null,
             ticketsAvailable: true
           },
@@ -59,7 +80,7 @@ const DordoyUltimate = () => {
             awayScore: 3,
             venue: 'Стадион Спорт Комплекс Абдыш-Ата',
             status: 'completed',
-            competitionLogo: 'https://via.placeholder.com/50/FF0000/FFFFFF?text=CUP',
+            competitionLogo: 'https://data.vb.kg/image/big/2025-05-28_10-15-20_531305.jpg',
             highlights: 'https://youtu.be/dQw4w9WgXcQ',
             ticketsAvailable: false
           },
@@ -74,7 +95,7 @@ const DordoyUltimate = () => {
             awayScore: 2,
             venue: 'Стадион Дордой, Бишкек',
             status: 'completed',
-            competitionLogo: 'https://via.placeholder.com/50/FFFF00/000000?text=PL',
+            competitionLogo: 'https://s.scr365.net/s1/logo/24_84_18/f56bGaRk_200_1299.png',
             highlights: 'https://youtu.be/dQw4w9WgXcQ',
             ticketsAvailable: false
           },
@@ -89,7 +110,7 @@ const DordoyUltimate = () => {
             awayScore: null,
             venue: 'Стадион Дордой, Бишкек',
             status: 'upcoming',
-            competitionLogo: 'https://via.placeholder.com/50/0000FF/FFFFFF?text=AFC',
+            competitionLogo: 'https://s.scr365.net/s1/logo/24_184_12/bDxPfOV_200_611.png',
             highlights: null,
             ticketsAvailable: true
           },
@@ -104,7 +125,7 @@ const DordoyUltimate = () => {
             awayScore: null,
             venue: 'Стадион Дордой, Бишкек',
             status: 'upcoming',
-            competitionLogo: 'https://via.placeholder.com/50/FFFF00/000000?text=PL',
+            competitionLogo: 'https://s.scr365.net/s1/logo/24_84_18/f56bGaRk_200_1299.png',
             highlights: null,
             ticketsAvailable: true
           }
@@ -113,12 +134,11 @@ const DordoyUltimate = () => {
         const mockStandings = [
           { position: 1, team: 'Абдыш-Ата', played: 12, won: 9, drawn: 2, lost: 1, gf: 28, ga: 8, gd: +20, points: 29, form: ['W', 'W', 'D', 'W', 'L'] },
           { position: 2, team: 'Дордой', played: 12, won: 8, drawn: 3, lost: 1, gf: 25, ga: 10, gd: +15, points: 27, form: ['W', 'D', 'W', 'W', 'W'] },
-          { position: 3, team: 'Алга', played: 12, won: 7, drawn: 2, lost: 3, gf: 20, ga: 12, gd: +8, points: 23, form: ['L', 'W', 'W', 'D', 'W'] },
+          { position: 3, team: 'Алга', played: 12, won: 7, drawn: 2, lost: 3, gf: 20, ga: 12, gd: +8, points: 23, form: ['L', 'W', 'W', 'D', 'W'],  },
           { position: 4, team: 'Нефтчи', played: 12, won: 6, drawn: 1, lost: 5, gf: 18, ga: 16, gd: +2, points: 19, form: ['W', 'L', 'D', 'L', 'W'] },
           { position: 5, team: 'Илбирс', played: 12, won: 4, drawn: 3, lost: 5, gf: 14, ga: 18, gd: -4, points: 15, form: ['L', 'D', 'W', 'L', 'L'] },
-          { position: 6, team: 'Истиклол', played: 12, won: 3, drawn: 4, lost: 5, gf: 12, ga: 15, gd: -3, points: 13, form: ['D', 'L', 'D', 'W', 'D'] },
-          { position: 7, team: 'Кара-Балта', played: 12, won: 3, drawn: 2, lost: 7, gf: 10, ga: 22, gd: -12, points: 11, form: ['L', 'W', 'L', 'L', 'D'] },
-          { position: 8, team: 'Алай', played: 12, won: 1, drawn: 1, lost: 10, gf: 6, ga: 31, gd: -25, points: 4, form: ['L', 'L', 'L', 'D', 'L'] }
+          { position: 6, team: 'Кара-Балта', played: 12, won: 3, drawn: 2, lost: 7, gf: 10, ga: 22, gd: -12, points: 11, form: ['L', 'W', 'L', 'L', 'D'] },
+          { position: 7, team: 'Алай', played: 12, won: 1, drawn: 1, lost: 10, gf: 6, ga: 31, gd: -25, points: 4, form: ['L', 'L', 'L', 'D', 'L'] }
         ];
         
         const mockPlayers = [
@@ -145,23 +165,6 @@ const DordoyUltimate = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white overflow-x-hidden" ref={containerRef}>
-      {/* Particle Background */}
-      <div className="fixed inset-0 overflow-hidden z-0">
-        {[...Array(30)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full bg-yellow-400 opacity-20"
-            style={{
-              width: Math.random() * 10 + 5,
-              height: Math.random() * 10 + 5,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              x: useTransform(scrollYProgress, [0, 1], [0, (Math.random() - 0.5) * 100]),
-              y: useTransform(scrollYProgress, [0, 1], [0, (Math.random() - 0.5) * 100]),
-            }}
-          />
-        ))}
-      </div>
 
       {/* Hero Section with Parallax */}
       <AnimatePresence>
@@ -195,7 +198,7 @@ const DordoyUltimate = () => {
                 className="text-center px-4"
               >
                 <motion.h1 
-                  className="text-6xl md:text-8xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600"
+                  className="text-5xl md:text-7xl lg:text-8xl font-bold mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600"
                   animate={{
                     backgroundPosition: ['0% 50%', '100% 50%'],
                   }}
@@ -212,21 +215,13 @@ const DordoyUltimate = () => {
                   ФК ДОРДОЙ
                 </motion.h1>
                 <motion.p 
-                  className="text-2xl md:text-4xl font-semibold mb-8 text-gray-300"
+                  className="text-xl md:text-3xl lg:text-4xl font-semibold mb-6 md:mb-8 text-gray-300"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8 }}
                 >
                   Легенды кыргызского футбола
                 </motion.p>
-                
-                <motion.div 
-                  className="flex justify-center space-x-6"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1 }}
-                >
-                </motion.div>
               </motion.div>
             </div>
             
@@ -251,10 +246,11 @@ const DordoyUltimate = () => {
 
       <MatchesView matches={matches} />
       <TableView standings={standings} players={players} />
+      <div className="container mx-auto px-4 py-8"></div>
       <CalendarView matches={matches} />
 
       {/* Floating Navigation */}
-        <motion.div 
+      <motion.div 
         className={`fixed top-4 left-0 right-0 z-50 px-4 transition-all ${heroVisible ? 'opacity-0 -translate-y-10' : 'opacity-100 translate-y-0'}`}
         initial={{ opacity: 0 }}
       >
@@ -263,7 +259,7 @@ const DordoyUltimate = () => {
             className="flex items-center"
             whileHover={{ scale: 1.05 }}
           >
-            <img src="https://via.placeholder.com/50/FFFF00/000000?text=DD" alt="Дордой" className="w-10 h-10 mr-3 rounded-full" />
+            <img src="./public/ФК_Дордой.png" alt="Дордой" className="w-10 h-10 mr-3 rounded-full" />
             <span className="font-bold text-yellow-400 text-lg">ФК ДОРДОЙ</span>
           </motion.div>
           
@@ -271,7 +267,7 @@ const DordoyUltimate = () => {
             whileHover={{ scale: 1.05 }}
             className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-full text-sm flex items-center"
           >
-            <FiShoppingCart className="mr-2" /> Билеты
+            <FiCalendar className="mr-2" /> Календарь
           </motion.button>
         </div>
       </motion.div>
@@ -336,20 +332,31 @@ const DordoyUltimate = () => {
             whileTap={{ scale: 0.95 }}
             className="bg-black/30 hover:bg-black/40 px-4 py-2 rounded-lg flex items-center text-sm font-bold backdrop-blur-sm"
           >
+            Смотреть
           </motion.button>
         </div>
       </motion.div>
 
-      {/* Floating Action Button */}
-      <motion.div 
-        className="fixed bottom-6 right-6 z-40"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <button className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold w-14 h-14 rounded-full shadow-xl shadow-yellow-500/30 flex items-center justify-center text-xl">
-          <FiShoppingCart />
-        </button>
-      </motion.div>
+      {/* Scroll to Top Button */}
+      <AnimatePresence>
+        {showScrollButton && (
+          <motion.div 
+            className="fixed bottom-6 right-6 z-40"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <button 
+              onClick={scrollToTop}
+              className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold w-14 h-14 rounded-full shadow-xl shadow-yellow-500/30 flex items-center justify-center text-xl transition-all"
+            >
+              <FiArrowUp />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
