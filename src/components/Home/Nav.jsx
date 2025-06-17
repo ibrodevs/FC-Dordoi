@@ -1,180 +1,136 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { useLocation, Link } from 'react-router-dom';
+import { FaBars, FaTimes } from 'react-icons/fa';
 
-const Nav = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+const DordoiNav = () => {
   const location = useLocation();
+  const [activeItem, setActiveItem] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const indicatorRef = useRef(null);
+  const itemRefs = useRef([]);
+  const navRef = useRef(null);
 
+  const menuItems = [
+    { path: "/", name: "Главная", color: "yellow" },
+    { path: "/about", name: "О клубе", color: "blue" },
+    { path: "/team", name: "Команда", color: "yellow" },
+    { path: "/matches", name: "Матчи", color: "blue" },
+    { path: "/gallery", name: "Галерея", color: "yellow" },
+    { path: "/contacts", name: "Контакты", color: "blue" },
+  ];
+
+  // Эффект для отслеживания скролла
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
     };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { path: "/", name: "Главная" },
-    { path: "/about", name: "О клубе" },
-    { path: "/team", name: "Команда" },
-    { path: "/matches", name: "Матчи" },
-    { path: "/gallery", name: "Галерея" },
-    { path: "/contacts", name: "Контакты" }
-  ];
+  // Определяем активный элемент при изменении маршрута
+  useEffect(() => {
+    const path = location.pathname;
+    const activeIndex = menuItems.findIndex(item => path === item.path);
+    setActiveItem(activeIndex >= 0 ? activeIndex : 0);
+  }, [location.pathname]);
 
-  const linkVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.6,
-        type: "spring",
-        stiffness: 100
+  // Обновляем позицию индикатора
+  useEffect(() => {
+    const updateIndicator = () => {
+      if (itemRefs.current[activeItem] && indicatorRef.current) {
+        const activeEl = itemRefs.current[activeItem];
+        indicatorRef.current.style.width = `${activeEl.offsetWidth}px`;
+        indicatorRef.current.style.left = `${activeEl.offsetLeft}px`;
+        indicatorRef.current.style.backgroundColor = 
+          menuItems[activeItem].color === 'yellow' ? '#FACC15' : '#3B82F6';
       }
-    }),
-    hover: {
-      scale: 1.1,
-      color: "#facc15",
-      transition: { duration: 0.2 }
-    }
-  };
+    };
 
-  const mobileMenuVariants = {
-    open: {
-      height: "auto",
-      opacity: 1,
-      transition: {
-        duration: 0.3,
-        ease: "easeInOut"
-      }
-    },
-    closed: {
-      height: 0,
-      opacity: 0,
-      transition: {
-        duration: 0.3,
-        ease: "easeInOut"
-      }
-    }
+    const timer = setTimeout(updateIndicator, 10);
+    window.addEventListener('resize', updateIndicator);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', updateIndicator);
+    };
+  }, [activeItem, isMobileMenuOpen]);
+
+  const handleNavClick = (index) => {
+    setActiveItem(index);
+    setIsMobileMenuOpen(false);
   };
 
   return (
-    <motion.header
-  className={`fixed w-full z-50 ${scrolled ? 'bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900/95 py-2 shadow-xl' : 'bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900/80 py-4'}`}
-  initial={{ y: -100 }}
-  animate={{ y: 0 }}
-  transition={{ type: "spring", damping: 10 }}
->
+    <div className={`w-full py-3 px-4 fixed top-0 z-50 transition-all duration-300 ${
+      isScrolled ? 'bg-blue-800/90 backdrop-blur-md shadow-md' : 'bg-transparent'
+    }`}>
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        {/* Логотип */}
+        <Link 
+          to="/" 
+          className="flex items-center mr-4"
+          onClick={() => handleNavClick(0)}
+        >
+          <img 
+            src="/public/vite.png" 
+            alt="FC Dordoi Logo" 
+            className="h-10 w-auto mr-2"
+          />
+         <span className="hidden sm:block text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-blue-600">
+  ФК ДОРДОЙ
+</span>
 
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center">
-          {/* Логотип с анимацией */}
-          <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 200 }}
-            whileHover={{ scale: 1.05 }}
-          >
-            <Link to="/" className="flex items-center">
-              <motion.div 
-  className="w-12 h-12 bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mr-3"
-  whileHover={{ rotate: 360 }}
-  transition={{ duration: 0.8 }}
->
 
-                <span className="text-blue-900 font-bold text-xl"><img src="../public/vite.png" alt="" /></span>
-              </motion.div>
-            </Link>
-          </motion.div>
+        </Link>
 
-          {/* Десктопное меню */}
-          <motion.nav className="hidden md:flex space-x-1">
-            {navLinks.map((link, i) => (
-              <motion.div
-                key={link.path}
-                custom={i}
-                variants={linkVariants}
-                initial="hidden"
-                animate="visible"
-                whileHover="hover"
-              >
-                <Link
-  to={link.path}
-  className={`block px-4 py-3 text-lg rounded-md ${location.pathname === link.path 
-    ? 'bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 text-blue-900 font-bold' 
-    : 'text-white hover:bg-gradient-to-r hover:from-blue-800 hover:to-blue-700'}`}
-  onClick={() => setIsOpen(false)}
->
+        {/* Кнопка мобильного меню */}
+        <button 
+          className="sm:hidden text-white focus:outline-none"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        </button>
 
-                  {link.name}
-                  {location.pathname === link.path && (
-                    <motion.span
-                      layoutId="navUnderline"
-                      className="absolute left-0 right-0 bottom-0 h-1 bg-yellow-400"
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
-                  )}
-                </Link>
-              </motion.div>
-            ))}
-          </motion.nav>
-
-          {/* Мобильное меню - кнопка */}
-          <motion.button
-            className="md:hidden flex flex-col items-center justify-center w-10 h-10"
-            onClick={() => setIsOpen(!isOpen)}
-            whileTap={{ scale: 0.9 }}
-          >
-            <motion.span
-              className={`block w-6 h-0.5 bg-white mb-1.5 transition-all ${isOpen ? 'rotate-45 translate-y-2' : ''}`}
-            />
-            <motion.span
-              className={`block w-6 h-0.5 bg-white mb-1.5 transition-all ${isOpen ? 'opacity-0' : 'opacity-100'}`}
-            />
-            <motion.span
-              className={`block w-6 h-0.5 bg-white transition-all ${isOpen ? '-rotate-45 -translate-y-2' : ''}`}
-            />
-          </motion.button>
-        </div>
-
-        {/* Мобильное меню - контент */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              variants={mobileMenuVariants}
-              initial="closed"
-              animate="open"
-              exit="closed"
-              className="md:hidden overflow-hidden"
+        {/* Навигация */}
+        <nav 
+          ref={navRef}
+          className={`ml-100 relative ${isMobileMenuOpen 
+            ? 'fixed top-16 left-0 right-0 bg-blue-700 z-50 py-4 shadow-lg' 
+            : 'hidden sm:flex'} items-center bg-blue-700 sm:bg-opacity-90 backdrop-blur-sm px-4 rounded-xl`}
+        >
+          {menuItems.map((item, index) => (
+            <Link
+              key={index}
+              to={item.path}
+              ref={(el) => (itemRefs.current[index] = el)}
+              className={`nav-item block sm:inline-block py-2 sm:py-3 px-4 sm:px-5 mx-1 z-10 relative font-medium transition-colors duration-300 ${
+                activeItem === index 
+                  ? item.color === 'yellow' ? 'text-yellow-400' : 'text-blue-400' 
+                  : 'text-gray-300'
+              } hover:text-white`}
+              onClick={() => handleNavClick(index)}
             >
-              <div className="pt-4 pb-6 space-y-2">
-                {navLinks.map((link, i) => (
-                  <motion.div
-                    key={link.path}
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: i * 0.1, duration: 0.3 }}
-                  >
-                    <Link
-                      to={link.path}
-                      className={`block px-4 py-3 text-lg rounded-md ${location.pathname === link.path ? 'bg-yellow-400 text-blue-900 font-bold' : 'text-white hover:bg-blue-800'}`}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {link.name}
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              {item.name}
+              {activeItem !== index && (
+                <span className="absolute bottom-[-4px] left-0 w-full h-[3px] bg-gray-600 rounded-t-lg opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:bottom-0"></span>
+              )}
+            </Link>
+          ))}
+          <span
+            ref={indicatorRef}
+            className="absolute left-0 bottom-0 h-[3px] transition-all duration-400 z-10 rounded-t-lg"
+          />
+        </nav>
       </div>
-    </motion.header>
+    </div>
   );
 };
 
-export default Nav;
+export default DordoiNav;
