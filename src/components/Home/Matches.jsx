@@ -15,18 +15,6 @@ const DordoyUltimate = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const containerRef = useRef(null);
   
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  });
-  
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const y = useTransform(scrollYProgress, [0, 1], [0, -200]);
-  
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (latest > 0.6) setHeroVisible(false);
-    else setHeroVisible(true);
-  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -171,7 +159,6 @@ const DordoyUltimate = () => {
         {heroVisible && (
           <motion.div 
             className="relative h-screen overflow-hidden"
-            style={{ opacity, y }}
             exit={{ opacity: 0 }}
           >
             <motion.div 
