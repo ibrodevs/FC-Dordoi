@@ -1,4 +1,5 @@
 import { ParallaxProvider } from 'react-scroll-parallax';
+import AboutPage from './Hero';
 import Footer from "../../components/Home/Footer";
 
 const About = () => {
