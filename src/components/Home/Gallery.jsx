@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FiSearch, FiX, FiChevronLeft, FiChevronRight, FiHeart, FiDownload, FiShare2 } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
+import Footer from "../Home/Footer";
 
 const GalleryPage = () => {
   const [activeCategory, setActiveCategory] = useState('all');
@@ -17,7 +18,7 @@ const GalleryPage = () => {
       title: "Чемпионский трофей 2023",
       category: "trophies",
       date: "2023-05-15",
-      imageUrl: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1479&q=80",
+      imageUrl: "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/yellow-pastel-award-night-digital-display-%289-design-template-30b4820c495877ffa6f32f46ba53a998_screen.jpg?ts=1746396263",
       tags: ["чемпионат", "победа", "кубок"],
       description: "Торжественный момент вручения чемпионского кубка нашей команде после победы в национальном чемпионате."
     },
@@ -26,7 +27,7 @@ const GalleryPage = () => {
       title: "Победный гол против Алги",
       category: "goals",
       date: "2023-04-22",
-      imageUrl: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1605&q=80",
+      imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQICX6jFpkGy9580ScZD6hK4JZQH96WTx9KTcHkBxyWju0EBFhcnE7JsOP3rNlBzaBgC38&usqp=CAU",
       tags: ["гол", "алга", "момент"],
       description: "Решающий гол в матче против Алги, который принес нам выход в финал турнира."
     },
@@ -35,7 +36,7 @@ const GalleryPage = () => {
       title: "Утренняя тренировка",
       category: "training",
       date: "2023-03-10",
-      imageUrl: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+      imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQ_2jPZP5oAyyvY8rep1qEAAnYqwR4k8vIbJaovR0LDpbaxbS8W8ZAWcXeIKGOfT83hw0&usqp=CAU",
       tags: ["тренировка", "подготовка", "команда"],
       description: "Команда на утренней тренировке перед ответственным матчем чемпионата."
     },
@@ -44,7 +45,7 @@ const GalleryPage = () => {
       title: "Поддержка фанатов",
       category: "fans",
       date: "2023-02-28",
-      imageUrl: "https://images.unsplash.com/photo-1507034589631-9433cc6bc453?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1584&q=80",
+      imageUrl: "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/yellow-pastel-award-night-digital-display-%289-design-template-30b4820c495877ffa6f32f46ba53a998_screen.jpg?ts=1746396263",
       tags: ["фанаты", "поддержка", "стадион"],
       description: "Наши преданные болельщики создают неповторимую атмосферу на стадионе."
     },
@@ -71,7 +72,7 @@ const GalleryPage = () => {
       title: "Лучший бомбардир сезона",
       category: "players",
       date: "2022-11-18",
-      imageUrl: "https://images.unsplash.com/photo-1543357480-c60d400e7ef6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+      imageUrl: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
       tags: ["игрок", "бомбардир", "рекорд"],
       description: "Наш форвард устанавливает новый рекорд клуба по количеству голов за сезон."
     },
@@ -80,7 +81,7 @@ const GalleryPage = () => {
       title: "Историческая победа",
       category: "history",
       date: "2022-10-30",
-      imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+      imageUrl: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
       tags: ["история", "момент", "архив"],
       description: "Момент исторической победы, который вошел в анналы клубной истории."
     },
@@ -107,7 +108,7 @@ const GalleryPage = () => {
       title: "Фанатская поддержка",
       category: "fans",
       date: "2022-07-05",
-      imageUrl: "https://images.unsplash.com/photo-1508098682722-e99c47a06b43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+      imageUrl: "https://photosota.club/uploads/posts/2023-02/1677171257_photosota-club-p-dordoi-futbolnii-klub-11.jpg",
       tags: ["ультрас", "поддержка", "атмосфера"],
       description: "Наши фанаты создают неповторимую атмосферу на выездных матчах."
     },
@@ -116,7 +117,7 @@ const GalleryPage = () => {
       title: "Золотой дубль",
       category: "trophies",
       date: "2022-06-18",
-      imageUrl: "https://images.unsplash.com/photo-1562077772-3bd90403f7f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+      imageUrl: "https://sputnik.kg/img/104385/39/1043853992_0:22:3067:1949_1920x0_80_0_0_896fe50975b4c73e348b5f966b01296f.jpg",
       tags: ["кубок", "чемпионат", "успех"],
       description: "Команда празднует золотой дубль - победу и в чемпионате, и в кубке страны."
     }
@@ -638,6 +639,8 @@ const GalleryPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      {/* Футер */}
+      <Footer />
     </div>
   );
 };
