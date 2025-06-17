@@ -2,7 +2,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiCalendar, FiMapPin, FiBell } from 'react-icons/fi';
 import { FaTrophy, FaTicketAlt, FaCrown } from 'react-icons/fa';
 
-const MatchCard = ({ match, activeTab }) => {
+const MatchCard = ({ match, activeTab = 'upcoming' }) => {
+  // Проверяем наличие обязательных полей
+  if (!match || !match.homeTeam || !match.awayTeam) {
+    console.error('Match data is incomplete:', match);
+    return (
+      <div className="p-4 bg-red-100 text-red-800 rounded-lg">
+        Ошибка: данные матча неполные или отсутствуют
+      </div>
+    );
+  }
+
   const isCompleted = activeTab === 'completed';
   const isDordoyWin =
     isCompleted &&
@@ -31,13 +41,22 @@ const MatchCard = ({ match, activeTab }) => {
     }
   };
 
-  const bgGradient = isCompleted
-    ? isDordoyWin
-      ? 'from-yellow-500/15 via-yellow-900/25 to-black/80'
-      : isDordoyLoss
-      ? 'from-red-500/15 via-red-900/25 to-black/80'
-      : 'from-gray-700 via-gray-900 to-black'
-    : 'from-blue-900/40 via-blue-900/15 to-gray-900';
+  // Определяем классы для разных состояний
+  let borderClass = 'border-blue-500/40';
+  let bgGradientClass = 'bg-gradient-to-br from-blue-900/40 via-blue-900/15 to-gray-900';
+
+  if (isCompleted) {
+    if (isDordoyWin) {
+      borderClass = 'border-yellow-500/40';
+      bgGradientClass = 'bg-gradient-to-br from-yellow-500/15 via-yellow-900/25 to-black/80';
+    } else if (isDordoyLoss) {
+      borderClass = 'border-red-500/40';
+      bgGradientClass = 'bg-gradient-to-br from-red-500/15 via-red-900/25 to-black/80';
+    } else {
+      borderClass = 'border-gray-700';
+      bgGradientClass = 'bg-gradient-to-br from-gray-700 via-gray-900 to-black';
+    }
+  }
 
   return (
     <motion.div
@@ -47,19 +66,13 @@ const MatchCard = ({ match, activeTab }) => {
       variants={cardVariants}
       className={`
         relative rounded-xl overflow-hidden border-2
-        bg-gradient-to-br ${bgGradient}
+        ${bgGradientClass}
+        ${borderClass}
         shadow-xl backdrop-blur-sm mx-2
-        w-full lg:w-[420px] xl:w-[460px] 2xl:w-[500px]
-        border-${isCompleted 
-          ? isDordoyWin 
-            ? 'yellow-500/40' 
-            : isDordoyLoss 
-              ? 'red-500/40' 
-              : 'gray-700' 
-          : 'blue-500/40'}
+        w-full max-w-md
       `}
     >
-      {/* Result badge */}
+      {/* Бейдж результата */}
       <AnimatePresence>
         {(isDordoyWin || isDordoyLoss) && (
           <motion.div
@@ -83,30 +96,32 @@ const MatchCard = ({ match, activeTab }) => {
       </AnimatePresence>
 
       <div className="p-5 lg:p-6">
-        {/* Competition and date */}
+        {/* Турнир и дата */}
         <div className="flex flex-col sm:flex-row justify-between items-start gap-3 mb-5">
           <div className="flex items-center gap-3 bg-gray-800/70 px-4 py-1.5 rounded-lg max-w-full">
             {match.competitionLogo && (
               <img 
                 src={match.competitionLogo} 
-                alt={match.competition} 
+                alt={match.competition || 'Лого турнира'} 
                 className="w-6 h-6 rounded-full object-contain" 
               />
             )}
             <span className="text-sm lg:text-base font-medium text-yellow-300 truncate">
-              {match.competition}
+              {match.competition || 'Турнир'}
             </span>
           </div>
           <div className="flex items-center gap-2 text-gray-300 text-sm lg:text-base">
             <FiCalendar size={16} />
-            <span>{match.date} • {match.time}</span>
+            <span>
+              {match.date || 'Дата'} • {match.time || 'Время'}
+            </span>
           </div>
         </div>
 
-        {/* Teams and score */}
+        {/* Команды и счет */}
         <div className="flex flex-col items-center py-4 lg:py-5">
           <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-5">
-            {/* Home team */}
+            {/* Хозяева */}
             <div className="w-full sm:w-auto sm:flex-1 text-center sm:text-right">
               <div className="flex flex-col items-end">
                 <h3 className={`text-2xl lg:text-3xl font-bold ${match.homeTeam === 'Дордой' ? 'text-yellow-400' : 'text-white'}`}>
@@ -118,7 +133,7 @@ const MatchCard = ({ match, activeTab }) => {
               </div>
             </div>
 
-            {/* Score */}
+            {/* Счет */}
             <motion.div 
               className="mx-0 sm:mx-5 my-2 sm:my-0"
               animate={{ 
@@ -140,14 +155,14 @@ const MatchCard = ({ match, activeTab }) => {
                     shadow-inner
                   `}
                 >
-                  {match.homeScore} : {match.awayScore}
+                  {match.homeScore ?? '0'} : {match.awayScore ?? '0'}
                 </motion.div>
               ) : (
                 <div className="text-4xl font-bold text-blue-400">vs</div>
               )}
             </motion.div>
 
-            {/* Away team */}
+            {/* Гости */}
             <div className="w-full sm:w-auto sm:flex-1 text-center sm:text-left">
               <div className="flex flex-col items-start">
                 <h3 className={`text-2xl lg:text-3xl font-bold ${match.awayTeam === 'Дордой' ? 'text-yellow-400' : 'text-white'}`}>
@@ -160,14 +175,16 @@ const MatchCard = ({ match, activeTab }) => {
             </div>
           </div>
 
-          {/* Venue */}
-          <div className="mt-4 lg:mt-5 flex items-center gap-2 text-gray-400 text-sm lg:text-base">
-            <FiMapPin size={16} />
-            <span className="text-center">{match.venue}</span>
-          </div>
+          {/* Место проведения */}
+          {match.venue && (
+            <div className="mt-4 lg:mt-5 flex items-center justify-center gap-2 text-gray-400 text-sm lg:text-base">
+              <FiMapPin size={16} />
+              <span>{match.venue}</span>
+            </div>
+          )}
         </div>
 
-        {/* Actions */}
+        {/* Действия для предстоящих матчей */}
         {!isCompleted && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -192,7 +209,7 @@ const MatchCard = ({ match, activeTab }) => {
           </motion.div>
         )}
 
-        {/* Victory message */}
+        {/* Сообщение о победе */}
         <AnimatePresence>
           {isCompleted && isDordoyWin && (
             <motion.div

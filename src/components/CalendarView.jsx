@@ -1,14 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiCalendar, FiClock, FiChevronLeft, FiChevronRight, FiBell, FiZap } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
 import MatchCard from './MatchCard';
 
-// Демо-матчи для разных дат
+// Обновленные демо-матчи с текущими датами
 const demoMatches = [
   {
     id: 1,
-    date: '2025-06-17',
+    date: '2025-06-15',
     time: '19:00',
     homeTeam: 'Дордой',
     awayTeam: 'Алга',
@@ -21,7 +21,7 @@ const demoMatches = [
   },
   {
     id: 2,
-    date: '2025-06-20',
+    date: '2025-06-18',
     time: '21:30',
     homeTeam: 'Дордой',
     awayTeam: 'Абдыш-Ата',
@@ -34,7 +34,7 @@ const demoMatches = [
   },
   {
     id: 3,
-    date: '2025-06-27',
+    date: '2025-06-25',
     time: '18:00',
     homeTeam: 'Дордой',
     awayTeam: 'Нефтчи',
@@ -44,34 +44,9 @@ const demoMatches = [
     isLive: false,
     homeScore: null,
     awayScore: null
-  },
-  {
-    id: 4,
-    date: '2025-07-01',
-    time: '20:00',
-    homeTeam: 'Дордой',
-    awayTeam: 'Кара-Балта',
-    homeLogo: '/ФК_Дордой.png',
-    awayLogo: '/ФК_Кара-Балта.png',
-    league: 'РПЛ',
-    isLive: false,
-    homeScore: null,
-    awayScore: null
-  },
-  {
-    id: 5,
-    date: '2025-07-05',
-    time: '16:30',
-    homeTeam: 'Дордой',
-    awayTeam: 'Алай',
-    homeLogo: '/ФК_Дордой.png',
-    awayLogo: '/FC_Alay_Logo.png',
-    league: 'РПЛ',
-    isLive: false,
-    homeScore: null,
-    awayScore: null
   }
 ];
+
 
 const CalendarView = ({ matches = demoMatches }) => {
   const today = new Date().toISOString().split('T')[0];
@@ -79,54 +54,6 @@ const CalendarView = ({ matches = demoMatches }) => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [direction, setDirection] = useState(0);
-
-  // Функция для получения дней месяца с правильным форматированием дат
-  const getDaysInMonth = (year, month) => {
-    const date = new Date(year, month - 1, 1);
-    const days = [];
-    const startDay = date.getDay() === 0 ? 6 : date.getDay() - 1;
-    date.setDate(0);
-    const prevMonthDays = date.getDate();
-
-    // Дни предыдущего месяца
-    for (let i = startDay - 1; i >= 0; i--) {
-      const dayDate = new Date(year, month - 2, prevMonthDays - i);
-      days.push({
-        day: prevMonthDays - i,
-        currentMonth: false,
-        date: formatDate(dayDate)
-      });
-    }
-
-    // Дни текущего месяца
-    date.setMonth(month - 1);
-    date.setDate(1);
-    const daysCount = new Date(year, month, 0).getDate();
-
-    for (let i = 1; i <= daysCount; i++) {
-      const dayDate = new Date(year, month - 1, i);
-      days.push({
-        day: i,
-        currentMonth: true,
-        date: formatDate(dayDate)
-      });
-    }
-
-    // Дни следующего месяца
-    const totalCells = Math.ceil(days.length / 7) * 7;
-    const nextMonthDays = totalCells - days.length;
-
-    for (let i = 1; i <= nextMonthDays; i++) {
-      const dayDate = new Date(year, month, i);
-      days.push({
-        day: i,
-        currentMonth: false,
-        date: formatDate(dayDate)
-      });
-    }
-
-    return days;
-  };
 
   // Форматирование даты в YYYY-MM-DD
   const formatDate = (date) => {
@@ -139,6 +66,52 @@ const CalendarView = ({ matches = demoMatches }) => {
     if (day.length < 2) day = '0' + day;
 
     return [year, month, day].join('-');
+  };
+
+  // Функция для получения дней месяца
+  const getDaysInMonth = (year, month) => {
+    const firstDay = new Date(year, month - 1, 1);
+    const lastDay = new Date(year, month, 0);
+    const daysInMonth = lastDay.getDate();
+    
+    const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Пн-Вс (0-6)
+    
+    const days = [];
+    
+    // Дни предыдущего месяца
+    const prevMonthLastDay = new Date(year, month - 1, 0).getDate();
+    for (let i = startDay - 1; i >= 0; i--) {
+      const day = prevMonthLastDay - i;
+      const date = new Date(year, month - 2, day);
+      days.push({
+        day,
+        currentMonth: false,
+        date: formatDate(date)
+      });
+    }
+    
+    // Дни текущего месяца
+    for (let i = 1; i <= daysInMonth; i++) {
+      const date = new Date(year, month - 1, i);
+      days.push({
+        day: i,
+        currentMonth: true,
+        date: formatDate(date)
+      });
+    }
+    
+    // Дни следующего месяца
+    const daysToAdd = 42 - days.length; // 6 недель
+    for (let i = 1; i <= daysToAdd; i++) {
+      const date = new Date(year, month, i);
+      days.push({
+        day: i,
+        currentMonth: false,
+        date: formatDate(date)
+      });
+    }
+    
+    return days;
   };
 
   const days = getDaysInMonth(year, month);
@@ -198,6 +171,16 @@ const CalendarView = ({ matches = demoMatches }) => {
     acc[match.date] = (acc[match.date] || 0) + 1;
     return acc;
   }, {});
+
+  // Автоматически переключаем на ближайшую дату с матчем
+  useEffect(() => {
+    if (selectedDateMatches.length === 0) {
+      const futureMatches = matches.filter(m => m.date >= today);
+      if (futureMatches.length > 0) {
+        setSelectedDate(futureMatches[0].date);
+      }
+    }
+  }, [month, year]);
 
   return (
     <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
