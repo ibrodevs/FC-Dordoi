@@ -78,7 +78,7 @@ const DordoiNav = () => {
     <div className={`w-full py-3 px-4 fixed top-0 z-50 transition-all duration-300 ${
       isScrolled ? 'bg-white/10 backdrop-blur-md shadow-md' : 'bg-transparent'
     }`}>
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="max-w-10xl mx-auto flex items-center justify-between">
         {/* Логотип */}
         <Link 
           to="/" 
