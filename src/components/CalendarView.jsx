@@ -4,7 +4,7 @@ import { FiCalendar, FiClock, FiChevronLeft, FiChevronRight, FiBell, FiZap } fro
 import { toast } from 'react-hot-toast';
 import MatchCard from './MatchCard';
 
-// Обновленные демо-матчи с текущими датами
+// Демо-матчи
 const demoMatches = [
   {
     id: 1,
@@ -47,7 +47,6 @@ const demoMatches = [
   }
 ];
 
-
 const CalendarView = ({ matches = demoMatches }) => {
   const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState(today);
@@ -68,13 +67,13 @@ const CalendarView = ({ matches = demoMatches }) => {
     return [year, month, day].join('-');
   };
 
-  // Функция для получения дней месяца
+  // Получение дней месяца
   const getDaysInMonth = (year, month) => {
     const firstDay = new Date(year, month - 1, 1);
     const lastDay = new Date(year, month, 0);
     const daysInMonth = lastDay.getDate();
     
-    const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Пн-Вс (0-6)
+    const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
     
     const days = [];
     
@@ -101,7 +100,7 @@ const CalendarView = ({ matches = demoMatches }) => {
     }
     
     // Дни следующего месяца
-    const daysToAdd = 42 - days.length; // 6 недель
+    const daysToAdd = 42 - days.length;
     for (let i = 1; i <= daysToAdd; i++) {
       const date = new Date(year, month, i);
       days.push({
@@ -115,9 +114,12 @@ const CalendarView = ({ matches = demoMatches }) => {
   };
 
   const days = getDaysInMonth(year, month);
-  
-  // Создаем Set с датами матчей для быстрой проверки
   const matchDatesSet = new Set(matches.map(m => m.date));
+  const selectedDateMatches = matches.filter(m => m.date === selectedDate);
+  const matchCountByDate = matches.reduce((acc, match) => {
+    acc[match.date] = (acc[match.date] || 0) + 1;
+    return acc;
+  }, {});
 
   const monthNames = [
     'Январь', 'Февраль', 'Март', 'Апрель', 
@@ -164,27 +166,22 @@ const CalendarView = ({ matches = demoMatches }) => {
     );
   };
 
-  // Получаем матчи для выбранной даты
-  const selectedDateMatches = matches.filter(m => m.date === selectedDate);
-  // Количество матчей для каждой даты
-  const matchCountByDate = matches.reduce((acc, match) => {
-    acc[match.date] = (acc[match.date] || 0) + 1;
-    return acc;
-  }, {});
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+  };
 
-  // Автоматически переключаем на ближайшую дату с матчем
+  // Только при первом рендере выбираем ближайший матч
   useEffect(() => {
-    if (selectedDateMatches.length === 0) {
+    if (selectedDateMatches.length === 0 && selectedDate === today) {
       const futureMatches = matches.filter(m => m.date >= today);
       if (futureMatches.length > 0) {
         setSelectedDate(futureMatches[0].date);
       }
     }
-  }, [month, year]);
+  }, []);
 
   return (
     <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Заголовок с анимацией */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -207,7 +204,6 @@ const CalendarView = ({ matches = demoMatches }) => {
         </h2>
       </motion.div>
 
-      {/* Навигация по месяцам */}
       <div className="flex justify-between items-center mb-6">
         <motion.button
           onClick={() => changeMonth(-1)}
@@ -242,7 +238,6 @@ const CalendarView = ({ matches = demoMatches }) => {
         </motion.button>
       </div>
 
-      {/* Календарь */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -276,7 +271,7 @@ const CalendarView = ({ matches = demoMatches }) => {
                     !currentMonth ? 'text-gray-600' :
                     hasMatch ? 'bg-gray-750 hover:bg-gray-700' : 'hover:bg-gray-700'}
                 `}
-                onClick={() => currentMonth && setSelectedDate(date)}
+                onClick={() => currentMonth && handleDateSelect(date)}
                 whileHover={{ scale: currentMonth ? 1.05 : 1 }}
                 whileTap={{ scale: currentMonth ? 0.95 : 1 }}
               >
@@ -306,7 +301,6 @@ const CalendarView = ({ matches = demoMatches }) => {
         </div>
       </motion.div>
 
-      {/* Матчи выбранного дня */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

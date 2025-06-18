@@ -86,7 +86,7 @@ const DordoiNav = () => {
           onClick={() => handleNavClick(0)}
         >
           <img 
-            src="/public/vite.png" 
+            src="https://upload.wikimedia.org/wikipedia/ru/0/01/%D0%A4%D0%9A_%D0%94%D0%BE%D1%80%D0%B4%D0%BE%D0%B9.png" 
             alt="FC Dordoi Logo" 
             className="h-10 w-auto mr-2"
           />
