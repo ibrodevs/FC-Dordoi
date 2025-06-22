@@ -432,31 +432,6 @@ const DordoyUltimate = () => {
         )}
       </div>
 
-      {/* Live Match Banner */}
-      <motion.div 
-        className="fixed bottom-0 left-0 right-0 bg-red-600 text-white z-40 py-3 px-6 shadow-lg"
-        initial={{ y: 100 }}
-        animate={{ y: 0 }}
-        transition={{ delay: 3 }}
-      >
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center">
-            <RiLiveFill className="text-2xl mr-3 animate-pulse" />
-            <div>
-              <p className="font-bold">ИДЕТ ПРЯМАЯ ТРАНСЛЯЦИЯ</p>
-              <p className="text-sm">Дордой - Алга • 2-1 • 67'</p>
-            </div>
-          </div>
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-black/30 hover:bg-black/40 px-4 py-2 rounded-lg flex items-center text-sm font-bold backdrop-blur-sm"
-          >
-            Смотреть
-          </motion.button>
-        </div>
-      </motion.div>
-
       {/* Scroll to Top Button */}
       <AnimatePresence>
         {showScrollButton && (
