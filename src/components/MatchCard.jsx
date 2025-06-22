@@ -123,7 +123,7 @@ const MatchCard = ({ match, activeTab = 'upcoming' }) => {
           <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-5">
             {/* Хозяева */}
             <div className="w-full sm:w-auto sm:flex-1 text-center sm:text-right">
-              <div className="flex flex-col items-end">
+              <div className="flex flex-col items-center">
                 <h3 className={`text-2xl lg:text-3xl font-bold ${match.homeTeam === 'Дордой' ? 'text-yellow-400' : 'text-white'}`}>
                   {match.homeTeam}
                 </h3>
@@ -164,7 +164,7 @@ const MatchCard = ({ match, activeTab = 'upcoming' }) => {
 
             {/* Гости */}
             <div className="w-full sm:w-auto sm:flex-1 text-center sm:text-left">
-              <div className="flex flex-col items-start">
+              <div className="flex flex-col items-center">
                 <h3 className={`text-2xl lg:text-3xl font-bold ${match.awayTeam === 'Дордой' ? 'text-yellow-400' : 'text-white'}`}>
                   {match.awayTeam}
                 </h3>
