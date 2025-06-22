@@ -1,395 +1,227 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiCalendar, FiClock, FiChevronLeft, FiChevronRight, FiBell, FiZap } from 'react-icons/fi';
-import { toast } from 'react-hot-toast';
+import { FiCalendar, FiClock, FiChevronLeft, FiChevronRight, FiArrowLeftCircle, FiArrowRightCircle, FiStar } from 'react-icons/fi';
 import MatchCard from './MatchCard';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ru'; // Для русской локализации
 
-// Демо-матчи
-const demoMatches = [
-  {
-    id: 1,
-    date: '2025-06-15',
-    time: '19:00',
-    homeTeam: 'Дордой',
-    awayTeam: 'Алга',
-    homeLogo: '/ФК_Дордой.png',
-    awayLogo: '/FK_Alga_Bishkek_Logo.svg.png',
-    league: 'РПЛ',
-    isLive: false,
-    homeScore: null,
-    awayScore: null
-  },
-  {
-    id: 2,
-    date: '2025-06-18',
-    time: '21:30',
-    homeTeam: 'Дордой',
-    awayTeam: 'Абдыш-Ата',
-    homeLogo: '/ФК_Дордой.png',
-    awayLogo: '/Эмблема_ФК_Абдыш-Ата.svg.png',
-    league: 'РПЛ',
-    isLive: false,
-    homeScore: null,
-    awayScore: null
-  },
-  {
-    id: 3,
-    date: '2025-06-25',
-    time: '18:00',
-    homeTeam: 'Дордой',
-    awayTeam: 'Нефтчи',
-    homeLogo: '/ФК_Дордой.png',
-    awayLogo: '/ФК_Нефтчи_(Кочкор-Ата).png',
-    league: 'РПЛ',
-    isLive: false,
-    homeScore: null,
-    awayScore: null
-  }
-];
+dayjs.locale('ru');
 
-const CalendarView = ({ matches = demoMatches }) => {
-  const today = new Date().toISOString().split('T')[0];
-  const [selectedDate, setSelectedDate] = useState(today);
-  const [month, setMonth] = useState(new Date().getMonth() + 1);
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [direction, setDirection] = useState(0);
+const DAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
-  // Форматирование даты в YYYY-MM-DD
-  const formatDate = (date) => {
-    const d = new Date(date);
-    let month = '' + (d.getMonth() + 1);
-    let day = '' + d.getDate();
-    const year = d.getFullYear();
+const CalendarView = ({ matches }) => {
+  const today = dayjs();
+  const [currentMonth, setCurrentMonth] = useState(dayjs('2025-06-01'));
+  const [selectedDate, setSelectedDate] = useState('2025-06-15');
 
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
+  // Для быстрого поиска матчей по дате
+  const matchMap = useMemo(() => {
+    const map = {};
+    matches.forEach(m => {
+      map[m.date] = map[m.date] ? [...map[m.date], m] : [m];
+    });
+    return map;
+  }, [matches]);
 
-    return [year, month, day].join('-');
+  const daysInMonth = currentMonth.daysInMonth();
+  const startDay = (currentMonth.startOf('month').day() || 7) - 1; // 0-based for grid
+  const displayedMonth = currentMonth.format('MMMM YYYY');
+
+  // Для навигации по неделям
+  const currentWeek = useMemo(() => {
+    const sel = dayjs(selectedDate);
+    const weekStart = sel.startOf('week').add(1, 'day'); // Пн
+    return Array.from({ length: 7 }, (_, i) => weekStart.add(i, 'day'));
+  }, [selectedDate]);
+
+  // Быстрое переключение на сегодня
+  const goToToday = () => {
+    setCurrentMonth(today.startOf('month'));
+    setSelectedDate(today.format('YYYY-MM-DD'));
   };
 
-  // Получение дней месяца
-  const getDaysInMonth = (year, month) => {
-    const firstDay = new Date(year, month - 1, 1);
-    const lastDay = new Date(year, month, 0);
-    const daysInMonth = lastDay.getDate();
-    
-    const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
-    
-    const days = [];
-    
-    // Дни предыдущего месяца
-    const prevMonthLastDay = new Date(year, month - 1, 0).getDate();
-    for (let i = startDay - 1; i >= 0; i--) {
-      const day = prevMonthLastDay - i;
-      const date = new Date(year, month - 2, day);
-      days.push({
-        day,
-        currentMonth: false,
-        date: formatDate(date)
-      });
-    }
-    
-    // Дни текущего месяца
-    for (let i = 1; i <= daysInMonth; i++) {
-      const date = new Date(year, month - 1, i);
-      days.push({
-        day: i,
-        currentMonth: true,
-        date: formatDate(date)
-      });
-    }
-    
-    // Дни следующего месяца
-    const daysToAdd = 42 - days.length;
-    for (let i = 1; i <= daysToAdd; i++) {
-      const date = new Date(year, month, i);
-      days.push({
-        day: i,
-        currentMonth: false,
-        date: formatDate(date)
-      });
-    }
-    
-    return days;
+  // Анимация смены месяца
+  const [monthDirection, setMonthDirection] = useState(0);
+  const handleMonthChange = (direction) => {
+    setMonthDirection(direction);
+    const newMonth = currentMonth.add(direction, 'month');
+    setCurrentMonth(newMonth);
+    // Если выбранная дата вне нового месяца — сбрасываем на 1 число
+    const fallbackDate = newMonth.startOf('month').format('YYYY-MM-DD');
+    setSelectedDate(fallbackDate);
   };
 
-  const days = getDaysInMonth(year, month);
-  const matchDatesSet = new Set(matches.map(m => m.date));
-  const selectedDateMatches = matches.filter(m => m.date === selectedDate);
-  const matchCountByDate = matches.reduce((acc, match) => {
-    acc[match.date] = (acc[match.date] || 0) + 1;
-    return acc;
-  }, {});
-
-  const monthNames = [
-    'Январь', 'Февраль', 'Март', 'Апрель', 
-    'Май', 'Июнь', 'Июль', 'Август', 
-    'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
-  ];
-
-  const changeMonth = (dir) => {
-    setDirection(dir);
-    if (dir === -1) {
-      if (month === 1) {
-        setMonth(12);
-        setYear(year - 1);
-      } else {
-        setMonth(month - 1);
-      }
-    } else {
-      if (month === 12) {
-        setMonth(1);
-        setYear(year + 1);
-      } else {
-        setMonth(month + 1);
-      }
-    }
+  // Анимация смены недели (на телефоне)
+  const handleWeekChange = (direction) => {
+    const newDate = dayjs(selectedDate).add(direction * 7, 'day');
+    setCurrentMonth(newDate.startOf('month'));
+    setSelectedDate(newDate.format('YYYY-MM-DD'));
   };
 
-  const handleReminder = () => {
-    toast.success(
-      <div>
-        <p className="font-medium">Мы уведомим вас о матчах!</p>
-        <p className="text-sm text-gray-200">Напоминание установлено на {new Date(selectedDate).toLocaleDateString('ru-RU')}</p>
-      </div>,
-      {
-        icon: <FiBell className="text-yellow-400" />,
-        style: {
-          background: '#1F2937',
-          color: '#fff',
-          border: '1px solid #374151',
-          borderRadius: '12px',
-          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)'
-        },
-        duration: 4000
-      }
+  // Рендер одного дня
+  const renderDay = (dateObj, isMobile = false) => {
+    const dateStr = dateObj.format('YYYY-MM-DD');
+    const isToday = dateObj.isSame(today, 'day');
+    const isSelected = dateStr === selectedDate;
+    const matchesForDay = matchMap[dateStr] || [];
+    const hasMatch = matchesForDay.length > 0;
+
+    return (
+      <motion.div
+        key={dateStr}
+        onClick={() => setSelectedDate(dateStr)}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.96 }}
+        className={[
+          'flex flex-col items-center justify-center cursor-pointer select-none transition-all',
+          isMobile ? 'min-w-[48px] h-16 snap-center rounded-lg' : 'h-12 rounded-md',
+          isSelected
+            ? 'bg-yellow-400 text-black font-bold shadow-lg'
+            : isToday
+            ? 'border-2 border-yellow-400 bg-gray-900 text-yellow-300'
+            : hasMatch
+            ? 'bg-gray-800 hover:bg-yellow-500/10 hover:text-yellow-300'
+            : 'bg-gray-800 hover:bg-gray-700/50 text-white',
+        ].join(' ')}
+        title={hasMatch ? `Матчей: ${matchesForDay.length}` : undefined}
+      >
+        <span>
+          {dateObj.date()}
+          {isToday && !isSelected && (
+            <FiStar className="inline ml-1 text-yellow-400 animate-pulse" />
+          )}
+        </span>
+        {hasMatch && (
+          <div className={`mt-1 w-2 h-2 rounded-full ${isSelected ? 'bg-black' : 'bg-yellow-400'}`} />
+        )}
+        {hasMatch && matchesForDay.length > 1 && (
+          <span className="text-xs text-yellow-600 font-bold">{matchesForDay.length}</span>
+        )}
+      </motion.div>
     );
   };
 
-  const handleDateSelect = (date) => {
-    setSelectedDate(date);
-  };
-
-  // Только при первом рендере выбираем ближайший матч
-  useEffect(() => {
-    if (selectedDateMatches.length === 0 && selectedDate === today) {
-      const futureMatches = matches.filter(m => m.date >= today);
-      if (futureMatches.length > 0) {
-        setSelectedDate(futureMatches[0].date);
-      }
-    }
-  }, []);
-
   return (
-    <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center mb-8"
-      >
-        <motion.div
-          animate={{ rotate: [0, 5, -5, 0] }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="relative"
-        >
-          <FiCalendar className="text-3xl text-yellow-400 mr-3" />
-          <motion.span 
-            className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ repeat: Infinity, duration: 1.5 }}
-          />
-        </motion.div>
-        <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">
-          Календарь матчей
+    <div className="text-white px-4 py-6 max-w-5xl mx-auto space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <h2 className="text-2xl sm:text-3xl font-extrabold flex items-center gap-2">
+          <FiCalendar className="text-yellow-400 text-3xl" />
+          <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-transparent bg-clip-text">
+            Календарь матчей
+          </span>
         </h2>
-      </motion.div>
-
-      <div className="flex justify-between items-center mb-6">
-        <motion.button
-          onClick={() => changeMonth(-1)}
-          whileHover={{ scale: 1.05, backgroundColor: '#4B5563' }}
-          whileTap={{ scale: 0.95 }}
-          className="p-2 rounded-xl bg-gray-700 text-white transition-all flex items-center justify-center w-12 h-12"
-          aria-label="Предыдущий месяц"
-        >
-          <FiChevronLeft className="text-xl" />
-        </motion.button>
-        
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`month-${month}-${year}`}
-            initial={{ opacity: 0, x: direction > 0 ? 30 : -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: direction > 0 ? -30 : 30 }}
-            className="text-xl font-bold text-yellow-400 px-6 py-3 bg-gray-700 rounded-xl flex items-center justify-center min-w-[200px] shadow-lg"
+        <div className="flex items-center gap-3 bg-gray-800 px-4 py-2 rounded-lg shadow-inner text-sm sm:text-base">
+          <button onClick={() => handleMonthChange(-1)} className="hover:text-yellow-400 transition">
+            <FiChevronLeft />
+          </button>
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={displayedMonth}
+              initial={{ opacity: 0, y: monthDirection * 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -monthDirection * 20 }}
+              transition={{ duration: 0.3 }}
+              className="font-semibold inline-block min-w-[120px] text-center"
+            >
+              {displayedMonth}
+            </motion.span>
+          </AnimatePresence>
+          <button onClick={() => handleMonthChange(1)} className="hover:text-yellow-400 transition">
+            <FiChevronRight />
+          </button>
+          <button
+            onClick={goToToday}
+            className="ml-2 px-2 py-1 rounded bg-yellow-400 text-black font-bold hover:bg-yellow-500 transition"
           >
-            {monthNames[month - 1]} {year}
-          </motion.div>
-        </AnimatePresence>
-        
-        <motion.button
-          onClick={() => changeMonth(1)}
-          whileHover={{ scale: 1.05, backgroundColor: '#4B5563' }}
-          whileTap={{ scale: 0.95 }}
-          className="p-2 rounded-xl bg-gray-700 text-white transition-all flex items-center justify-center w-12 h-12"
-          aria-label="Следующий месяц"
-        >
-          <FiChevronRight className="text-xl" />
-        </motion.button>
+            Сегодня
+          </button>
+        </div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="bg-gray-800 rounded-2xl shadow-xl overflow-hidden mb-8 border border-gray-700"
-      >
-        <div className="grid grid-cols-7 bg-gradient-to-r from-gray-700 to-gray-800 text-gray-300 text-center font-medium py-4">
-          {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map(day => (
-            <motion.div 
-              key={day} 
-              className="text-yellow-300 text-sm uppercase tracking-wider"
-              whileHover={{ scale: 1.1 }}
-            >
-              {day}
-            </motion.div>
+      {/* Mini-widget for phones (неделя) */}
+      <div className="sm:hidden flex flex-col gap-2">
+        <div className="flex items-center justify-between mb-1">
+          <button
+            onClick={() => handleWeekChange(-1)}
+            className="text-2xl text-yellow-400 hover:text-yellow-500"
+            aria-label="Предыдущая неделя"
+          >
+            <FiArrowLeftCircle />
+          </button>
+          <span className="text-lg font-semibold">{dayjs(selectedDate).format('D MMMM YYYY')}</span>
+          <button
+            onClick={() => handleWeekChange(1)}
+            className="text-2xl text-yellow-400 hover:text-yellow-500"
+            aria-label="Следующая неделя"
+          >
+            <FiArrowRightCircle />
+          </button>
+        </div>
+        <div className="flex gap-3 overflow-x-auto snap-x pb-3">
+          {currentWeek.map(dateObj => renderDay(dateObj, true))}
+        </div>
+      </div>
+
+      {/* Desktop Calendar */}
+      <div className="bg-gray-900/80 rounded-xl shadow-xl p-3 sm:p-4 max-w-xl mx-auto hidden sm:block">
+        <div className="grid grid-cols-7 text-center text-gray-400 text-sm font-medium mb-2">
+          {DAYS.map(day => (
+            <div key={day} className="py-1">{day}</div>
           ))}
         </div>
-        
-        <div className="grid grid-cols-7 gap-1 p-2">
-          {days.map(({ day, currentMonth, date }) => {
-            const hasMatch = matchDatesSet.has(date);
-            const isSelected = date === selectedDate;
-            const isToday = date === today;
-            const matchCount = matchCountByDate[date] || 0;
-
-            return (
-              <motion.div
-                key={`day-${date}`}
-                className={`h-16 flex flex-col items-center justify-center rounded-xl cursor-pointer relative transition-all
-                  ${isSelected ? 'bg-gradient-to-br from-yellow-500 to-yellow-600 text-gray-900 font-bold shadow-lg' :
-                    !currentMonth ? 'text-gray-600' :
-                    hasMatch ? 'bg-gray-750 hover:bg-gray-700' : 'hover:bg-gray-700'}
-                `}
-                onClick={() => currentMonth && handleDateSelect(date)}
-                whileHover={{ scale: currentMonth ? 1.05 : 1 }}
-                whileTap={{ scale: currentMonth ? 0.95 : 1 }}
-              >
-                {isToday && !isSelected && (
-                  <motion.div
-                    className="absolute top-1 right-1 w-2 h-2 rounded-full bg-blue-400"
-                    animate={{ scale: [1, 1.3, 1] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                  />
-                )}
-                <div className={`text-sm ${isSelected ? 'font-bold' : 'font-medium'}`}>{day}</div>
-                {hasMatch && (
-                  <motion.div 
-                    className={`flex items-center justify-center mt-1 ${isSelected ? 'text-gray-900' : 'text-yellow-400'}`}
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                  >
-                    <FiZap className="text-xs" />
-                    {matchCount > 1 && (
-                      <span className="text-xs ml-0.5">{matchCount}</span>
-                    )}
-                  </motion.div>
-                )}
-              </motion.div>
-            );
+        <div className="grid grid-cols-7 gap-2">
+          {Array.from({ length: startDay }).map((_, i) => (
+            <div key={`empty-${i}`} className="h-12"></div>
+          ))}
+          {Array.from({ length: daysInMonth }).map((_, i) => {
+            const dateObj = currentMonth.date(i + 1);
+            return renderDay(dateObj, false);
           })}
         </div>
-      </motion.div>
+      </div>
 
+      {/* Matches */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="mb-8"
+        key={selectedDate}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full flex justify-center"
       >
-        <div className="flex items-center justify-between mb-6">
-          <motion.h3 
-            className="text-xl font-semibold text-white flex items-center"
-            initial={{ x: -10 }}
-            animate={{ x: 0 }}
-            transition={{ type: 'spring', stiffness: 300 }}
-          >
-            <motion.div
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="mr-2"
-            >
-              <FiClock className="text-yellow-400" />
-            </motion.div>
-            Матчи на {new Date(selectedDate).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}
-          </motion.h3>
-          
-          {selectedDateMatches.length === 0 && (
-            <motion.button
-              onClick={handleReminder}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center px-4 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 font-medium rounded-xl transition-all text-sm shadow-lg"
-            >
-              <FiBell className="mr-2" />
-              Напомнить
-            </motion.button>
-          )}
-        </div>
-        
-        <AnimatePresence mode="wait">
-          {selectedDateMatches.length > 0 ? (
-            <motion.div
-              key={`matches-${selectedDate}`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              className="grid gap-4"
-            >
-              {selectedDateMatches.map((match, index) => (
-                <motion.div
-                  key={match.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, type: 'spring', stiffness: 200 }}
-                >
-                  <MatchCard 
-                    match={match} 
-                    activeTab="upcoming"
-                    glow={index % 2 === 0 ? 'from-blue-500/20' : 'from-yellow-500/20'}
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
-          ) : (
-            <motion.div
-              key={`no-matches-${selectedDate}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="py-12 text-center bg-gray-800 rounded-2xl border-2 border-dashed border-gray-700"
-            >
-              <div className="mb-6 flex justify-center">
-                <motion.div
-                  animate={{ scale: [1, 1.05, 1], rotate: [0, 5, -5, 0] }}
-                  transition={{ repeat: Infinity, duration: 3 }}
-                >
-                  <FiClock className="text-4xl text-gray-500" />
-                </motion.div>
-              </div>
-              <p className="text-gray-400 mb-2">На выбранную дату матчей нет</p>
-              <p className="text-sm text-gray-500 mb-6">Попробуйте выбрать другую дату</p>
-              <motion.button
-                onClick={() => setSelectedDate(today)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-6 py-2 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-medium rounded-xl transition-all text-sm shadow-lg border border-gray-600"
+        <div className="w-full sm:w-4/5 lg:w-2/3 space-y-6">
+          <h3 className="text-xl font-bold text-center flex justify-center items-center gap-2">
+            <FiClock className="text-yellow-300" />
+            Матчи на {dayjs(selectedDate).format('D MMMM YYYY')}
+          </h3>
+          <AnimatePresence mode="wait">
+            {(matchMap[selectedDate]?.length > 0) ? (
+              <motion.div
+                key="match-list"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4 }}
+                className="grid gap-4"
               >
-                Сегодня
-              </motion.button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                {matchMap[selectedDate].map(match => (
+                  <MatchCard key={match.id} match={match} activeTab="upcoming" />
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="no-matches"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3 }}
+                className="text-center py-10 bg-gray-800/80 rounded-lg"
+              >
+                <p className="text-gray-400">На выбранную дату матчей не запланировано</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </motion.div>
     </div>
   );

@@ -204,7 +204,7 @@ const MatchCard = ({ match, activeTab = 'upcoming' }) => {
               whileTap={{ scale: 0.98 }}
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg text-sm lg:text-base flex items-center justify-center gap-2"
             >
-              <FaTicketAlt size={16} /> Билеты
+              <FaTicketAlt size={16} /> <a href="https://ticket.kg/events/football"><span>Билеты</span></a>
             </motion.button>
           </motion.div>
         )}

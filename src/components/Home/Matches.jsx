@@ -44,7 +44,7 @@ const DordoyUltimate = () => {
         const mockMatches = [
           {
             id: 1,
-            date: '2023-06-15',
+            date: '2025-06-15',
             time: '18:00',
             competition: 'Премьер Лига Кыргызстана',
             homeTeam: 'Дордой',
@@ -59,7 +59,7 @@ const DordoyUltimate = () => {
           },
           {
             id: 2,
-            date: '2023-06-10',
+            date: '2025-06-10',
             time: '17:30',
             competition: 'Кубок Кыргызстана',
             homeTeam: 'Абдыш-Ата',
@@ -74,7 +74,7 @@ const DordoyUltimate = () => {
           },
           {
             id: 3,
-            date: '2023-06-05',
+            date: '2025-06-05',
             time: '19:00',
             competition: 'Премьер Лига Кыргызстана',
             homeTeam: 'Дордой',
@@ -89,7 +89,7 @@ const DordoyUltimate = () => {
           },
           {
             id: 4,
-            date: '2023-06-20',
+            date: '2025-06-20',
             time: '16:00',
             competition: 'АФК Кубок',
             homeTeam: 'Дордой',
@@ -104,7 +104,7 @@ const DordoyUltimate = () => {
           },
           {
             id: 5,
-            date: '2023-06-25',
+            date: '2025-06-25',
             time: '15:00',
             competition: 'Премьер Лига Кыргызстана',
             homeTeam: 'Дордой',
