@@ -267,40 +267,6 @@ const DordoyUltimate = () => {
               ЛЕГЕНДЫ КЫРГЫЗСКОГО ФУТБОЛА
             </motion.span>
           </motion.p>
-
-          {/* Кнопка с "электрическим" эффектом */}
-          <motion.button
-            className="px-10 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-bold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ 
-              opacity: 1, 
-              scale: 1,
-              transition: {
-                delay: 1.5,
-                duration: 0.8,
-                type: "spring",
-              }
-            }}
-            whileHover={{ 
-              scale: 1.05,
-              background: "linear-gradient(to right, #f59e0b, #fcd34d, #f59e0b)",
-            }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="relative z-10">СТАТЬ ЧАСТЬЮ КОМАНДЫ</span>
-            <motion.span
-              className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-500 opacity-0 hover:opacity-100 transition-opacity duration-300"
-              animate={{
-                x: [-100, 100],
-                opacity: [0, 0.4, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            />
-          </motion.button>
         </motion.div>
       </div>
 

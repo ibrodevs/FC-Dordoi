@@ -97,7 +97,7 @@ const MatchCard = ({ match, activeTab = 'upcoming' }) => {
 
       <div className="p-5 lg:p-6">
         {/* Турнир и дата */}
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-3 mb-5">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mb-5">
           <div className="flex items-center gap-3 bg-gray-800/70 px-4 py-1.5 rounded-lg max-w-full">
             {match.competitionLogo && (
               <img 
