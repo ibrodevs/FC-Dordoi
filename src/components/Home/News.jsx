@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { FaArrowRight, FaArrowLeft, FaCalendarAlt, FaSearch, FaTimes, FaExternalLinkAlt, FaFutbol, FaShare, FaHeart, FaRegHeart, FaComment } from "react-icons/fa";
 import { IoMdNotifications } from "react-icons/io";
 import { RiLiveFill } from "react-icons/ri";
+import axios from 'axios';
 
 const FootballNewsPage = () => {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -12,102 +13,36 @@ const FootballNewsPage = () => {
   const [likedNews, setLikedNews] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollContainerRef = useRef(null);
-  
-  const featuredNews = [
-    {
-      id: 1,
-      title: "Дордой - чемпион лиги 2023!",
-      date: "15 мая 2023",
-      excerpt: "Историческая победа после напряженного сезона",
-      image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      content: "Футбольный клуб 'Дордой' вчера вечером одержал историческую победу, завоевав чемпионский титул после напряженного сезона. Решающий матч против главных конкурентов завершился со счетом 2:1. Оба гола забил наш капитан в последние 15 минут игры. Это первый титул за последние 3 года для нашего клуба. Тысячи болельщиков встречали команду в аэропорту и праздновали победу до утра на центральной площади города. Главный тренер в интервью отметил, что это только начало большого пути, и команда уже готовится к участию в международных турнирах.",
-      likes: 1243,
-      comments: 56,
-      isLive: false
-    },
-    {
-      id: 2,
-      title: "Новый стадион Дордоя получил сертификат AFC",
-      date: "10 мая 2023",
-      excerpt: "Теперь мы можем принимать матчи Лиги Чемпионов АФК",
-      image: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      content: "Наш новый стадион 'Дордой Арена' получил высшую категорию AFC, что позволяет проводить на нем матчи Лиги Чемпионов АФК. Инспекторы AFC высоко оценили инфраструктуру, безопасность и комфорт для болельщиков. Стадион вмещает 25,000 зрителей и оснащен современной системой освещения, травяным покрытием с подогревом и цифровыми табло. Первым крупным турниром на новом стадионе станет матч группового этапа Лиги Чемпионов АФК в сентябре этого года. Президент клуба заявил, что это достижение стало возможным благодаря многолетней работе всей команды.",
-      likes: 876,
-      comments: 34,
-      isLive: true
-    },
-    {
-      id: 3,
-      title: "Дордой подписал контракт с новым спонсором",
-      date: "20 апреля 2023",
-      excerpt: "4-летнее соглашение с ведущим спортивным брендом",
-      image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      content: "ФК 'Дордой' заключил 4-летнее спонсорское соглашение с международным спортивным брендом. В рамках партнерства компания будет поставлять экипировку для всех команд клуба, включая академию, а также разработает специальный дизайн формы с акцентом на традиционные сине-желтые цвета. Первая коллекция формы поступит в продажу уже в июне. Кроме того, бренд инвестирует в развитие детской академии клуба. Это самое крупное спонсорское соглашение в истории нашего клуба.",
-      likes: 1024,
-      comments: 42,
-      isLive: false
-    }
-  ];
-
-  const allNews = [
-    {
-      id: 4,
-      title: "Молодежная команда Дордоя выиграла турнир",
-      date: "28 апреля 2023",
-      excerpt: "Юные футболисты показали отличную игру в финале",
-      content: "Молодежная команда ФК 'Дордой' (U-19) вчера стала победителем национального турнира, обыграв в финале главных конкурентов со счетом 3:0. Особенно отличился 17-летний нападающий, оформивший хет-трик. Этот успех подтверждает эффективность работы нашей академии, которая в последние годы сделала ставку на развитие местных талантов. Трое игроков молодежной команды уже получили приглашение в сборную страны своего возраста. Главный тренер молодежки отметил, что это только начало пути для этих ребят, и в ближайшие годы мы увидим их в основном составе.",
-      likes: 543,
-      comments: 23,
-      isLive: false
-    },
-    {
-      id: 5,
-      title: "Открытие нового тренировочного центра Дордоя",
-      date: "12 апреля 2023",
-      excerpt: "Современный комплекс с 5 полями и медицинским центром",
-      content: "Сегодня состоялось торжественное открытие нового тренировочного центра ФК 'Дордой'. Комплекс площадью 30 гектаров включает 5 футбольных полей (2 с натуральным покрытием и 3 с искусственным), крытый манеж, медицинский центр с современным оборудованием, бассейны и тренажерные залы. Центр будет использоваться не только основной командой, но и академией клуба. Президент отметил, что это важный шаг в развитии инфраструктуры клуба и создании условий для воспитания новых звезд футбола.",
-      likes: 765,
-      comments: 31,
-      isLive: false
-    },
-    {
-      id: 6,
-      title: "Легенда Дордоя завершает карьеру",
-      date: "1 сентября 2023",
-      excerpt: "Капитан команды сыграет последний матч в этом сезоне",
-      content: "Капитан нашей команды, проведший в 'Дордое' 12 лет и сыгравший более 400 матчей, объявил о завершении карьеры по окончании текущего сезона. В честь легенды клуба запланирована серия мероприятий, включая прощальный матч с участием бывших партнеров по команде. Клуб уже предложил ветерану должность в тренерском штабе, но окончательное решение пока не принято. Болельщики начали сбор подписей за установку памятника у нового стадиона. 'Это не прощание, а начало нового этапа в истории клуба', - заявил президент.",
-      likes: 2104,
-      comments: 128,
-      isLive: false
-    },
-    {
-      id: 7,
-      title: "Дордой представил новую форму на сезон 2023/24",
-      date: "5 марта 2023",
-      excerpt: "Дизайн вдохновлен историческими цветами клуба",
-      content: "Сегодня на специальной презентации ФК 'Дордой' представил новую игровую форму на предстоящий сезон. Дизайн домашней формы выполнен в традиционных сине-желтых цветах с современными элементами, а гостевая форма сделана в радикально новом черно-золотом дизайне. Особенностью коллекции стало использование экологичных материалов - форма на 90% состоит из переработанного пластика. Форма поступит в продажу 15 марта, причем часть средств от продаж пойдет на благотворительные проекты клуба. Дизайнеры отмечают, что вдохновлялись архивными фотографиями 90-х годов, когда клуб только начинал свой путь.",
-      likes: 987,
-      comments: 45,
-      isLive: false
-    },
-    {
-      id: 8,
-      title: "Дордой начал подготовку к Лиге Чемпионов",
-      date: "10 июня 2023",
-      excerpt: "Первые тренировки перед международными матчами",
-      content: "ФК 'Дордой' начал интенсивную подготовку к предстоящим матчам Лиги Чемпионов АФК. Тренерский штаб разработал специальную программу тренировок, направленную на повышение выносливости и тактической гибкости команды. В ближайшие две недели запланированы три контрольных матча с сильными соперниками. Главный тренер заявил, что команда находится в отличной форме и готова показать достойную игру на международной арене. Первый матч группового этапа состоится уже через месяц.",
-      likes: 654,
-      comments: 29,
-      isLive: true
-    }
-  ];
+  const [featuredNews, setFeaturedNews] = useState([]);
+  const [allNews, setAllNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % featuredNews.length);
-    }, 5000);
-    return () => clearInterval(interval);
+    const fetchNews = async () => {
+      try {
+        const [featuredResponse, allResponse] = await Promise.all([
+          axios.get('http://localhost:8000/api/news/featured/'),
+          axios.get('http://localhost:8000/api/news/all/')
+        ]);
+        setFeaturedNews(featuredResponse.data);
+        setAllNews(allResponse.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
   }, []);
+  
+  useEffect(() => {
+  const interval = setInterval(() => {
+    setActiveSlide((prev) => (prev + 1) % featuredNews.length);
+  }, 5000);
+  return () => clearInterval(interval);
+}, [featuredNews.length]); // Dependency on featuredNews.length to re-run when data changes
 
   useEffect(() => {
     const handleScroll = () => {
@@ -236,13 +171,13 @@ const FootballNewsPage = () => {
                   className="absolute inset-0"
                 >
                   <img 
-                    src={featuredNews[activeSlide].image} 
-                    alt={featuredNews[activeSlide].title}
+                    src={featuredNews[activeSlide]?.image || 'https://via.placeholder.com/800x480'} 
+                    alt={featuredNews[activeSlide]?.title || 'Featured News'}
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent">
                     <div className="absolute bottom-0 left-0 p-8 text-white">
-                      {featuredNews[activeSlide].isLive && (
+                      {featuredNews[activeSlide]?.isLive && (
                         <motion.div
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
@@ -255,18 +190,18 @@ const FootballNewsPage = () => {
                       )}
                       <div className="flex items-center text-sm mb-3">
                         <FaCalendarAlt className="mr-2 text-yellow-400" />
-                        {featuredNews[activeSlide].date}
+                        {featuredNews[activeSlide]?.date || 'N/A'}
                         <span className="mx-3">|</span>
                         <div className="flex items-center">
                           <FaHeart className="mr-1 text-red-500" />
-                          {featuredNews[activeSlide].likes}
+                          {featuredNews[activeSlide]?.likes || 0}
                         </div>
                       </div>
                       <h2 className="text-2xl md:text-3xl font-bold mb-3">
-                        {featuredNews[activeSlide].title}
+                        {featuredNews[activeSlide]?.title || 'No Title'}
                       </h2>
                       <p className="text-gray-200 mb-4">
-                        {featuredNews[activeSlide].excerpt}
+                        {featuredNews[activeSlide]?.excerpt || 'No excerpt available'}
                       </p>
                       <motion.button 
                         whileHover={{ scale: 1.05 }}
@@ -280,29 +215,21 @@ const FootballNewsPage = () => {
                   </div>
                 </motion.div>
               </AnimatePresence>
-
-              <div className="absolute bottom-8 right-8 flex gap-2">
-                {featuredNews.map((_, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => setActiveSlide(index)}
-                    whileHover={{ scale: 1.2 }}
-                    className={`w-3 h-3 rounded-full ${activeSlide === index ? 'bg-yellow-400' : 'bg-white/50'}`}
-                  />
-                ))}
-              </div>
-
+                    
+              {/* Navigation Arrows */}
               <motion.button 
                 onClick={() => setActiveSlide((prev) => (prev - 1 + featuredNews.length) % featuredNews.length)}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 text-white p-3 rounded-full hover:bg-black/50 transition-all opacity-0 group-hover:opacity-100"
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 text-white p-3 rounded-full hover:bg-black/50 transition-all opacity-100"
                 whileHover={{ scale: 1.1 }}
+                disabled={featuredNews.length <= 1}
               >
                 <FaArrowLeft />
               </motion.button>
               <motion.button 
                 onClick={() => setActiveSlide((prev) => (prev + 1) % featuredNews.length)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 text-white p-3 rounded-full hover:bg-black/50 transition-all opacity-0 group-hover:opacity-100"
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 text-white p-3 rounded-full hover:bg-black/50 transition-all opacity-100"
                 whileHover={{ scale: 1.1 }}
+                disabled={featuredNews.length <= 1}
               >
                 <FaArrowRight />
               </motion.button>
