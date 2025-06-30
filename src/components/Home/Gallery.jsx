@@ -145,16 +145,6 @@ const GalleryPage = () => {
   });
 
   // Обработчики
-  const toggleLike = (id) => {
-    const newLikedImages = new Set(likedImages);
-    if (newLikedImages.has(id)) {
-      newLikedImages.delete(id);
-    } else {
-      newLikedImages.add(id);
-    }
-    setLikedImages(newLikedImages);
-  };
-
   const openImage = (image) => {
     setSelectedImage(image);
     setIsZoomed(false);
@@ -498,28 +488,6 @@ const GalleryPage = () => {
                         })}
                       </motion.div>
                     </motion.div>
-
-                    {/* Кнопка лайка с анимацией */}
-                    <motion.button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleLike(item.id);
-                      }}
-                      className="absolute top-3 right-3 p-2 rounded-full bg-gray-900/50 backdrop-blur-sm z-10"
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ 
-                        opacity: isHovered === item.id ? 1 : 0.7,
-                        y: isHovered === item.id ? 0 : -5
-                      }}
-                      whileHover={{ scale: 1.1, backgroundColor: "rgba(239, 68, 68, 0.8)" }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <FiHeart
-                        className={`h-5 w-5 ${
-                          likedImages.has(item.id) ? 'text-red-500 fill-red-500' : 'text-white'
-                        }`}
-                      />
-                    </motion.button>
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -616,20 +584,6 @@ const GalleryPage = () => {
                     >
                       {selectedImage.title}
                     </motion.h2>
-                    <motion.button
-                      onClick={() => toggleLike(selectedImage.id)}
-                      className="p-2 rounded-full hover:bg-gray-800 transition-colors"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <FiHeart
-                        className={`h-6 w-6 ${
-                          likedImages.has(selectedImage.id)
-                            ? 'text-red-500 fill-red-500'
-                            : 'text-gray-400'
-                        }`}
-                      />
-                    </motion.button>
                   </div>
 
                   <motion.div 
