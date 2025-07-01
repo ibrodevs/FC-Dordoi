@@ -48,7 +48,7 @@ const  UltraTeamPage = () => {
 });
 
   // Загрузка данных
-  useEffect(() => {ф
+  useEffect(() => {
     const loadData = async () => {
       try {
         const [playersData] = await Promise.all([
