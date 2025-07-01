@@ -11,7 +11,7 @@
   import CoachCard from './CoachCard';
   import PlayerModal from './PlayerModal';
 
-import { fetchPlayers, fetchCoaches, fetchAcademyCoaches } from '../api';
+import { fetchPlayers } from '../api';
 
   const  UltraTeamPage = () => {
     // Состояния
@@ -50,14 +50,10 @@ import { fetchPlayers, fetchCoaches, fetchAcademyCoaches } from '../api';
     useEffect(() => {
   const loadData = async () => {
     try {
-      const [playersData, coachesData, academyCoachesData] = await Promise.all([
-        fetchPlayers(),
-        fetchCoaches(),
-        fetchAcademyCoaches(),
+      const [playersData] = await Promise.all([
+        fetchPlayers()
       ]);
       setPlayers(playersData);
-      setCoaches(coachesData);
-      setAcademyCoaches(academyCoachesData);
     } catch (error) {
       console.error("Ошибка загрузки данных:", error);
     } finally {
