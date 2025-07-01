@@ -49,22 +49,25 @@ const  UltraTeamPage = () => {
 
   // Загрузка данных
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [playersData] = await Promise.all([
-          fetchPlayers(),
-        ]);
-        
-        setPlayers(playersData);
-      } catch (error) {
-        console.error("Ошибка загрузки данных:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadData();
-  }, []);
+  const loadData = async () => {
+    try {
+      const [playersData, coachesData, academyCoachesData] = await Promise.all([
+        fetchPlayers(),
+        fetchCoaches(),         // реализуй функцию fetchCoaches
+        fetchAcademyCoaches(),  // реализуй функцию fetchAcademyCoaches
+      ]);
+      setPlayers(playersData);
+      setCoaches(coachesData);
+      setAcademyCoaches(academyCoachesData);
+    } catch (error) {
+      console.error("Ошибка загрузки данных:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  loadData();
+}, []);
+
 
   const handlePlayerClick = (player) => {
     setSelectedPlayer(player);
