@@ -14,7 +14,7 @@ import PlayerModal from './PlayerModal';
 // API
 import { fetchPlayers } from '../api';
 
-const UltraTeamPage = () => {
+const  UltraTeamPage = () => {
   // Состояния
   const [activeTab, setActiveTab] = useState('players');
   const [isLoading, setIsLoading] = useState(true);
@@ -48,7 +48,7 @@ const UltraTeamPage = () => {
 });
 
   // Загрузка данных
-  useEffect(() => {
+  useEffect(() => {ф
     const loadData = async () => {
       try {
         const [playersData] = await Promise.all([
