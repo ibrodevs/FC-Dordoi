@@ -1,5 +1,12 @@
-export const fetchPlayers = async () => {
-  const response = await fetch('http://localhost:8000/api/players/');
-  if (!response.ok) throw new Error('Ошибка загрузки данных');
-  return response.json();
-};
+const API_URL = 'https://fc-backend-vxea.onrender.com';
+
+export async function fetchPlayers() {
+  try {
+    const response = await fetch(`${API_URL}/api/players/`);
+    if (!response.ok) throw new Error('Ошибка сети');
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
