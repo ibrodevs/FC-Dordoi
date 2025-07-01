@@ -11,7 +11,7 @@ const slides = [
   {
     title: "АЛГА ДОРДОЙ",
     subtitle: "Непобедимый дух Кыргызстана",
-    media: "/public/Champ10n.mp4",
+    media: "/Champ10n.mp4",
     cta: "Купить билеты",
     link: "https://kassir.kg/ru/category/sport", // ссылка на билеты
     color: "#FFD700",

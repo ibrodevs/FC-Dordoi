@@ -48,7 +48,7 @@ function ClubInfo() {
                 }}
                 className="w-full relative h-full object-cover aspect-square">
                 <source
-                  src="/public/видео_дор.mp4"
+                  src="/видео_дор.mp4"
                   type="video/mp4"
                 />
               </video>
