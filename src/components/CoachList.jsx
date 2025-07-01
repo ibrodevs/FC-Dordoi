@@ -22,7 +22,7 @@ const CoachList = () => {
   useEffect(() => {
     const fetchCoaches = async () => {
       try {
-        const response = await fetch('/api/coaches/');
+        const response = await fetch('/coaches/');
         if (!response.ok) throw new Error('Ошибка загрузки данных');
         const data = await response.json();
         setCoaches(data);
