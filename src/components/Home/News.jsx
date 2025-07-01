@@ -22,7 +22,6 @@ const FootballNewsPage = () => {
     const fetchNews = async () => {
       try {
         const [featuredResponse, allResponse] = await Promise.all([
-          axios.get('https://fc-backend-vxea.onrender.com/news/featured/'),
           axios.get('https://fc-backend-vxea.onrender.com/api/news/all/')
         ]);
         setFeaturedNews(featuredResponse.data);
