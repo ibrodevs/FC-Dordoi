@@ -48,13 +48,13 @@ const  UltraTeamPage = () => {
 });
 
   // Загрузка данных
- useEffect(() => {
+  useEffect(() => {
   const loadData = async () => {
     try {
       const [playersData, coachesData, academyCoachesData] = await Promise.all([
         fetchPlayers(),
-        fetchCoaches(),
-        fetchAcademyCoaches()
+        fetchCoaches(),         // реализуй функцию fetchCoaches
+        fetchAcademyCoaches(),  // реализуй функцию fetchAcademyCoaches
       ]);
       setPlayers(playersData);
       setCoaches(coachesData);
@@ -65,10 +65,8 @@ const  UltraTeamPage = () => {
       setIsLoading(false);
     }
   };
-
   loadData();
 }, []);
-
 
 
   const handlePlayerClick = (player) => {
