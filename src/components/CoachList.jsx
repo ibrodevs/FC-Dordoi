@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CoachCard from './CoachCard';
 import CoachModal from './CoachModal';
 
+import { fetchCoaches } from '../api';
+
+
 const CoachList = () => {
   const [coaches, setCoaches] = useState([]);
   const [filteredCoaches, setFilteredCoaches] = useState([]);
@@ -20,22 +23,22 @@ const CoachList = () => {
   ];
 
   useEffect(() => {
-    const fetchCoaches = async () => {
-      try {
-        const response = await fetch('/coaches/');
-        if (!response.ok) throw new Error('Ошибка загрузки данных');
-        const data = await response.json();
-        setCoaches(data);
-        setFilteredCoaches(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const loadCoaches = async () => {
+    setLoading(true);
+    try {
+      const data = await fetchCoaches();  // импортированная функция
+      setCoaches(data);
+      setFilteredCoaches(data);
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  loadCoaches();
+}, []);
 
-    fetchCoaches();
-  }, []);
 
   useEffect(() => {
     if (activeFilter === 'all') {

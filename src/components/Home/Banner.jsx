@@ -111,137 +111,128 @@ const slides = [
 
       {/* Вступительная анимация */}
       <AnimatePresence>
-        {showIntro && (
-          <motion.div
-            className="absolute inset-0 z-50 flex items-center justify-center"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-          >
-            {showIntro && (
-  <motion.div
-    className="absolute inset-0 z-50 flex items-center justify-center bg-black"
-    initial={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    transition={{ duration: 0.8, ease: "easeInOut" }}
-  >
+  {showIntro && (
     <motion.div
-      className="relative"
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ 
-        scale: [0.8, 1.1, 1],
-        opacity: [0, 1, 1],
-        rotate: [0, 5, -3, 0]
-      }}
-      transition={{ 
-        duration: 1.8,
-        times: [0, 0.6, 1],
-        ease: [0.16, 1, 0.3, 1]
-      }}
+      className="absolute inset-0 z-50 flex items-center justify-center bg-black"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.8, ease: "easeInOut" }}
     >
-      <motion.h1
-        className="text-8xl font-black uppercase tracking-tighter text-center"
-        style={{
-          fontFamily: "'Bebas Neue', sans-serif",
-          color: "#FFD700",
-          textShadow: "0 0 20px rgba(255, 215, 0, 0.8)",
-          lineHeight: 0.9
-        }}
-        initial={{ letterSpacing: "50px", opacity: 0 }}
-        animate={{ 
-          letterSpacing: "10px",
-          opacity: 1
-        }}
-        transition={{
-          delay: 0.3,
-          duration: 1.2,
-          ease: [0.22, 1, 0.36, 1]
-        }}
-      >
-        <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-        >
-          АЛГА
-        </motion.div>
-        <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          style={{ color: "#0000ff", textShadow: "0 0 20px rgba(0, 0, 255, 0.8)" }}
-        >
-          ДОРДОЙ
-        </motion.div>
-      </motion.h1>
-      
-      {/* Эффект вспышки */}
       <motion.div
-        className="absolute inset-0 bg-yellow-400 rounded-full mix-blend-overlay"
-        initial={{ scale: 0, opacity: 0 }}
+        className="relative w-full px-4"
+        initial={{ scale: 0.8, opacity: 0 }}
         animate={{ 
-          scale: [0, 4],
-          opacity: [0, 0.8, 0]
+          scale: [0.8, 1.1, 1],
+          opacity: [0, 1, 1],
+          rotate: [0, 5, -3, 0]
         }}
         transition={{ 
-          delay: 0.8,
-          duration: 1.2,
-          ease: "easeOut"
+          duration: 1.8,
+          times: [0, 0.6, 1],
+          ease: [0.16, 1, 0.3, 1]
         }}
-      />
-      
-      {/* Эффект частиц золота */}
-      {[...Array(30)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-3 h-3 bg-yellow-400 rounded-full"
-          initial={{ 
-            x: 0, 
-            y: 0, 
-            opacity: 0,
-            scale: 0.5
+      >
+        <motion.h1
+          className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-center"
+          style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            color: "#FFD700",
+            textShadow: "0 0 10px rgba(255, 215, 0, 0.8)",
+            lineHeight: 0.9
           }}
+          initial={{ letterSpacing: "30px", opacity: 0 }}
           animate={{ 
-            x: Math.random() * 600 - 300,
-            y: Math.random() * 600 - 300,
-            opacity: [0, 1, 0],
-            scale: [0.5, 1.2, 0]
+            letterSpacing: "5px",
+            opacity: 1
+          }}
+          transition={{
+            delay: 0.3,
+            duration: 1.2,
+            ease: [0.22, 1, 0.36, 1]
+          }}
+        >
+          <motion.div
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+          >
+            АЛГА
+          </motion.div>
+          <motion.div
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+            style={{ color: "#0000ff", textShadow: "0 0 10px rgba(0, 0, 255, 0.8)" }}
+          >
+            ДОРДОЙ
+          </motion.div>
+        </motion.h1>
+        
+        {/* Эффект вспышки (уменьшен для мобильных) */}
+        <motion.div
+          className="absolute inset-0 bg-yellow-400 rounded-full mix-blend-overlay"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ 
+            scale: [0, 2],
+            opacity: [0, 0.6, 0]
           }}
           transition={{ 
-            delay: 1 + i * 0.03,
+            delay: 0.8,
+            duration: 1.2,
+            ease: "easeOut"
+          }}
+        />
+        
+        {/* Эффект частиц золота (меньше частиц на мобильных) */}
+        {[...Array(window.innerWidth < 768 ? 15 : 30)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 md:w-3 md:h-3 bg-yellow-400 rounded-full"
+            initial={{ 
+              x: 0, 
+              y: 0, 
+              opacity: 0,
+              scale: 0.5
+            }}
+            animate={{ 
+              x: Math.random() * (window.innerWidth < 768 ? 200 : 600) - (window.innerWidth < 768 ? 100 : 300),
+              y: Math.random() * (window.innerWidth < 768 ? 200 : 600) - (window.innerWidth < 768 ? 100 : 300),
+              opacity: [0, 1, 0],
+              scale: [0.5, 1.2, 0]
+            }}
+            transition={{ 
+              delay: 1 + i * 0.03,
+              duration: 1.5,
+              ease: "easeOut"
+            }}
+            style={{
+              left: "50%",
+              top: "50%",
+              boxShadow: "0 0 5px #FFD700"
+            }}
+          />
+        ))}
+        
+        {/* Эффект волны (уменьшенный) */}
+        <motion.div
+          className="absolute inset-0 overflow-hidden"
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ 
+            scale: window.innerWidth < 768 ? 1.2 : 1.5,
+            opacity: [0, 0.5, 0]
+          }}
+          transition={{
+            delay: 0.7,
             duration: 1.5,
             ease: "easeOut"
           }}
-          style={{
-            left: "50%",
-            top: "50%",
-            boxShadow: "0 0 10px #FFD700"
-          }}
-        />
-      ))}
-      
-      {/* Эффект волны */}
-      <motion.div
-        className="absolute inset-0 overflow-hidden"
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ 
-          scale: 1.5,
-          opacity: [0, 0.5, 0]
-        }}
-        transition={{
-          delay: 0.7,
-          duration: 1.5,
-          ease: "easeOut"
-        }}
-      >
-        <div className="absolute inset-0 border-4 border-yellow-400 rounded-full"></div>
+        >
+          <div className="absolute inset-0 border-2 md:border-4 border-yellow-400 rounded-full"></div>
+        </motion.div>
       </motion.div>
     </motion.div>
-  </motion.div>
-)}
-          </motion.div>
-        )}
-      </AnimatePresence>
+  )}
+</AnimatePresence>
 
       {/* Основной контент (показывается только после вступительной анимации) */}
       {!showIntro && (

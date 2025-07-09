@@ -60,7 +60,7 @@ const StoryCard = ({ story, onClick, index }) => {
   
   return (
     <motion.div
-      className="min-w-[280px] rounded-xl overflow-hidden shadow-xl cursor-pointer relative flex-shrink-0"
+      className="min-w-[200px] w-[200px] rounded-xl overflow-hidden shadow-xl cursor-pointer relative flex-shrink-0"
       variants={cardVariants}
       initial="hidden"
       animate="visible"
@@ -68,7 +68,7 @@ const StoryCard = ({ story, onClick, index }) => {
       custom={index}
       onClick={onClick}
     >
-      <div className="relative h-[360px]">
+      <div className="relative h-[300px]">
         <img
           src={story.thumbnail || story.media[0]?.url}
           alt={story.title}
@@ -76,10 +76,10 @@ const StoryCard = ({ story, onClick, index }) => {
           loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-900/30 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-          <div className="mb-3">
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+          <div className="mb-2">
             <motion.span 
-              className="text-xs font-bold bg-gradient-to-r from-blue-700 to-blue-600 text-white px-3 py-1 rounded-full inline-block"
+              className="text-xs font-bold bg-gradient-to-r from-blue-700 to-blue-600 text-white px-2 py-1 rounded-full inline-block"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + index * 0.05 }}
@@ -88,7 +88,7 @@ const StoryCard = ({ story, onClick, index }) => {
             </motion.span>
           </div>
           <motion.h3 
-            className="text-2xl font-bold line-clamp-2 mb-2 leading-tight"
+            className="text-lg font-bold line-clamp-2 mb-1 leading-tight"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -97,7 +97,7 @@ const StoryCard = ({ story, onClick, index }) => {
             {story.title}
           </motion.h3>
           <motion.p 
-            className="text-sm text-gray-200"
+            className="text-xs text-gray-200"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 + index * 0.05 }}
@@ -107,7 +107,7 @@ const StoryCard = ({ story, onClick, index }) => {
         </div>
         {story.isNew && (
           <motion.span 
-            className="absolute top-4 left-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 text-xs font-bold px-3 py-1 rounded-full z-10 shadow-md"
+            className="absolute top-3 left-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 text-xs font-bold px-2 py-0.5 rounded-full z-10 shadow-md"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.35 + index * 0.05, type: 'spring' }}
@@ -117,7 +117,7 @@ const StoryCard = ({ story, onClick, index }) => {
         )}
         {story.media.some(item => item.type === 'video') && (
           <motion.div 
-            className="absolute top-4 right-4 bg-blue-900/80 p-2 rounded-full z-10 backdrop-blur-sm"
+            className="absolute top-3 right-3 bg-blue-900/80 p-1.5 rounded-full z-10 backdrop-blur-sm"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.4 + index * 0.05, type: 'spring' }}
@@ -433,7 +433,7 @@ const storiesData = [
     subtitle: "Эксклюзив",
     description: "Главный тренер команды раскрывает планы на сезон и стратегию подготовки к чемпионату.",
     media: [
-      { type: 'video', path: "./interv.mp4" },
+      { type: 'video', url: "./interv.mp4" },
       { type: 'image', url: "https://images.unsplash.com/photo-1543357486-cf2718d69e13?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=1200&q=80" }
     ],
     thumbnail: "https://images.unsplash.com/photo-1543357486-cf2718d69e13?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=400&q=80",
@@ -478,17 +478,16 @@ const StoriesPage = () => {
               }
             }
           }
-          return prev + 0.5; // Более плавный прогресс
+          return prev + 0.5;
         });
         
-        // Обновляем прогресс истории только при первом медиа
         if (currentMediaIndex === 0) {
           setStoryProgress(prev => {
             if (prev >= 100) return 0;
             return prev + (100 / (storiesData[currentStoryIndex].media.length * 200));
           });
         }
-      }, 20); // Более частое обновление для плавности
+      }, 20);
     }
     return () => clearInterval(timer);
   }, [isModalOpen, currentStoryIndex, currentMediaIndex, autoplay]);
@@ -565,7 +564,7 @@ const StoriesPage = () => {
 
   const scrollCarousel = (direction) => {
     if (!carouselRef.current) return;
-    const scrollAmount = direction === 'left' ? -320 : 320;
+    const scrollAmount = direction === 'left' ? -220 : 220;
     carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   };
 
@@ -579,7 +578,6 @@ const StoriesPage = () => {
       });
     } catch (err) {
       console.log('Ошибка при использовании Web Share API:', err);
-      // Fallback для браузеров без поддержки Web Share API
       const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`${story.title}: ${story.description}`)}&url=${encodeURIComponent(window.location.href)}`;
       window.open(shareUrl, '_blank');
     }
@@ -628,7 +626,7 @@ const StoriesPage = () => {
         {/* Карусель историй */}
         <motion.div
           ref={carouselRef}
-          className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide py-6 space-x-6 pb-10 cursor-grab active:cursor-grabbing"
+          className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide py-6 space-x-4 pb-10 cursor-grab active:cursor-grabbing"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           onMouseDown={startDrag}
           onMouseMove={duringDrag}
