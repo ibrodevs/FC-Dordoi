@@ -1,16 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { FaBars, FaTimes } from 'react-icons/fa';
 
 const DordoiNav = () => {
   const location = useLocation();
   const [activeItem, setActiveItem] = useState(0);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const indicatorRef = useRef(null);
   const itemRefs = useRef([]);
-  const navRef = useRef(null);
   const animationFrameRef = useRef(null);
+  const navRef = useRef(null);
 
   const menuItems = [
     { path: "/", name: "Главная", color: "yellow" },
@@ -30,14 +29,14 @@ const DordoiNav = () => {
 
   // Оптимизированная функция обновления индикатора
   const updateIndicator = useCallback(() => {
-    if (itemRefs.current[activeItem] && indicatorRef.current) {
+    if (itemRefs.current[activeItem] && indicatorRef.current && !isMobileMenuOpen) {
       const activeEl = itemRefs.current[activeItem];
       indicatorRef.current.style.width = `${activeEl.offsetWidth}px`;
       indicatorRef.current.style.left = `${activeEl.offsetLeft}px`;
       indicatorRef.current.style.backgroundColor = 
         menuItems[activeItem].color === 'yellow' ? '#FACC15' : '#3B82F6';
     }
-  }, [activeItem]);
+  }, [activeItem, isMobileMenuOpen]);
 
   // Эффекты для прокрутки и ресайза с requestAnimationFrame
   useEffect(() => {
@@ -54,7 +53,12 @@ const DordoiNav = () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
-      animationFrameRef.current = requestAnimationFrame(updateIndicator);
+      animationFrameRef.current = requestAnimationFrame(() => {
+        updateIndicator();
+        if (window.innerWidth > 768) {
+          setIsMobileMenuOpen(false);
+        }
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -83,21 +87,16 @@ const DordoiNav = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (navRef.current && !navRef.current.contains(event.target) && 
-          !event.target.closest('button[aria-label="menu"]')) {
+          !event.target.closest('.mobile-menu-button')) {
         setIsMobileMenuOpen(false);
       }
     };
 
-    if (isMobileMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('touchstart', handleClickOutside);
-    }
-
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
     };
-  }, [isMobileMenuOpen]);
+  }, []);
 
   return (
     <div className={`w-full py-3 px-4 fixed top-0 z-50 transition-all duration-300 ${
@@ -119,54 +118,29 @@ const DordoiNav = () => {
             width="40"
             height="40"
           />
-          <span className="hidden sm:block text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-blue-600">
+          <span className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-blue-600">
             ФК ДОРДОЙ
           </span>
         </Link>
 
-        {/* Кнопка мобильного меню с улучшенной доступностью */}
-        <button 
-          className="sm:hidden text-white focus:outline-none p-2 z-50 mr-20"
+        {/* Кнопка мобильного меню */}
+        <button
+          className="md:hidden mobile-menu-button z-50 p-2 rounded-md focus:outline-none"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label={isMobileMenuOpen ? "Закрыть меню" : "Открыть меню"}
+          aria-label="Меню"
           aria-expanded={isMobileMenuOpen}
         >
-          {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-        </button>
-
-        {/* Мобильное меню (бургер) */}
-        {isMobileMenuOpen && (
-          <div 
-            className="sm:hidden fixed inset-0 top-16 bg-blue-800/95 backdrop-blur-md z-40 overflow-y-auto"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <div className="flex flex-col items-center pt-4 pb-8 px-4">
-              {menuItems.map((item, index) => (
-                <Link
-                  key={index}
-                  to={item.path}
-                  className={`w-full text-center py-4 px-5 my-1 font-medium transition-colors duration-300 ${
-                    activeItem === index 
-                      ? item.color === 'yellow' ? 'text-yellow-400' : 'text-blue-400' 
-                      : 'text-gray-300'
-                  } hover:text-white`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleNavClick(index);
-                  }}
-                  aria-current={activeItem === index ? "page" : undefined}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
+          <div className="w-6 flex flex-col items-end gap-1.5">
+            <span className={`block h-0.5 bg-white transition-all duration-300 ${isMobileMenuOpen ? 'w-6 rotate-45 translate-y-2' : 'w-6'}`}></span>
+            <span className={`block h-0.5 bg-white transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'w-5'}`}></span>
+            <span className={`block h-0.5 bg-white transition-all duration-300 ${isMobileMenuOpen ? 'w-6 -rotate-45 -translate-y-2' : 'w-4'}`}></span>
           </div>
-        )}
+        </button>
 
         {/* Десктопное меню */}
         <nav 
           ref={navRef}
-          className="hidden sm:flex ml-100 relative items-center bg-blue-700/90 backdrop-blur-sm px-4 rounded-xl"
+          className={`hidden md:flex relative items-center bg-blue-700/90 backdrop-blur-sm px-4 rounded-xl`}
           aria-label="Основное меню"
         >
           <div className="flex items-center">
@@ -195,6 +169,31 @@ const DordoiNav = () => {
             className="absolute left-0 bottom-0 h-[3px] transition-all duration-400 z-10 rounded-t-lg"
           />
         </nav>
+
+        {/* Мобильное меню */}
+        <div 
+          className={`md:hidden fixed top-0 left-0 w-full h-screen bg-blue-900/95 backdrop-blur-lg z-40 pt-20 px-4 transition-all duration-300 transform ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        >
+          <div className="flex flex-col items-center space-y-6 mt-10">
+            {menuItems.map((item, index) => (
+              <Link
+                key={index}
+                to={item.path}
+                className={`text-2xl font-medium py-3 px-6 w-full text-center rounded-lg transition-colors duration-300 ${
+                  activeItem === index 
+                    ? item.color === 'yellow' 
+                      ? 'bg-yellow-400 text-blue-900' 
+                      : 'bg-blue-400 text-white'
+                    : 'text-gray-200 hover:bg-blue-800'
+                }`}
+                onClick={() => handleNavClick(index)}
+                aria-current={activeItem === index ? "page" : undefined}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

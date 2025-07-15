@@ -4,7 +4,6 @@ import Stories from './components/Home/Stories';
 import News from './components/Home/News';
 import Nav from './components/Home/Nav';
 import Count from './components/Home/Count';
-import Tab from './components/Home/Tab';
 import Hero from './components/Home/Trop';
 import About from './Pages/AboutPage/About';
 import Team from './Pages/Team';
@@ -13,6 +12,7 @@ import Gallery from './Pages/Gallery';
 import Contacts from './Pages/Contacts';
 import Footer from './components/Home/Footer';
 import Video from './components/Videoef';
+import Tab from './components/Home/Tab';
 
 const Home = () => (
   <>
@@ -20,8 +20,8 @@ const Home = () => (
     <Stories />
     <Count />
     <Video />
-    <News />
-    <Tab />
+      <News />
+    <Tab  />
     <Hero />
     <Footer />
   </>

@@ -53,3 +53,9 @@
 .animate-bounce-slow {
   animation: bounce-slow 2.5s infinite;
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
