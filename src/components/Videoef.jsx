@@ -1,293 +1,147 @@
-import React, { useEffect, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import React from 'react';
 
 function ClubInfo() {
-  const controls = useAnimation();
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-    controls.start('visible');
-  }, [controls]);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const cardHoverEffect = {
-    scale: 1.02,
-    transition: { duration: 0.3 }
-  };
-
   return (
-    <div 
-      className="min-h-screen w-full overflow-hidden relative"
-      style={{
-        background: 'linear-gradient(135deg, #0a1f44 0%, #1a3a8a 50%, #2a5fff 100%)',
-        backgroundSize: '400% 400%',
-        animation: 'gradientBG 15s ease infinite'
-      }}
-    >
-      {/* Анимированные частицы фона */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full bg-yellow-400 opacity-10"
-            style={{
-              width: Math.random() * 10 + 5 + 'px',
-              height: Math.random() * 10 + 5 + 'px',
-              top: Math.random() * 100 + '%',
-              left: Math.random() * 100 + '%',
-            }}
-            animate={{
-              y: [0, (Math.random() - 0.5) * 100],
-              x: [0, (Math.random() - 0.5) * 100],
-              opacity: [0.1, 0.2, 0.1],
-            }}
-            transition={{
-              duration: Math.random() * 10 + 10,
-              repeat: Infinity,
-              repeatType: "reverse",
-              ease: "linear"
-            }}
-          />
-        ))}
-      </div>
-
-      <style jsx global>{`
-        @keyframes gradientBG {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .club-card {
-          backdrop-filter: blur(16px);
-          background: rgba(20, 40, 100, 0.5);
-          border-top: 1px solid rgba(234, 179, 8, 0.5);
-          border-left: 1px solid rgba(234, 179, 8, 0.5);
-          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-          transition: all 0.3s ease;
-        }
-        .club-card:hover {
-          border-color: rgba(234, 179, 8, 0.8);
-          box-shadow: 0 15px 50px rgba(234, 179, 8, 0.2);
-        }
-        .glow-text {
-          text-shadow: 0 0 15px rgba(234, 179, 8, 0.8);
-          transition: text-shadow 0.3s ease;
-        }
-        .glow-text:hover {
-          text-shadow: 0 0 20px rgba(234, 179, 8, 1);
-        }
-        .glow-box {
-          box-shadow: 0 0 20px rgba(234, 179, 8, 0.4);
-        }
-        .hex-mask {
-          mask-image: url('/hexagon2.svg');
-          mask-size: contain;
-          mask-repeat: no-repeat;
-          mask-position: center;
-          filter: drop-shadow(0 0 15px rgba(234, 179, 8, 0.6));
-        }
-      `}</style>
-
-      <div className="container mx-auto px-4 py-12 md:py-24 flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
-        {/* Видео с анимацией */}
-        <motion.div 
-          className="w-full md:w-1/2"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <section className="gap-2 rounded-lg p-5">
-            <motion.figure 
-              className="relative"
-              whileHover={{ scale: 1.03 }}
-              transition={{ duration: 0.3 }}
-            >
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 relative overflow-hidden">
+      {/* Фоновые элементы */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"></div>
+      <div className="absolute top-1/4 -left-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/4 -right-10 w-72 h-72 bg-cyan-400/5 rounded-full blur-3xl"></div>
+      
+      <div className="container mx-auto px-4 py-12 md:py-24 flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
+        
+        {/* Видео секция с современным дизайном */}
+        <div className="w-full md:w-1/2">
+          <div className="relative group">
+            <div className="absolute -inset-4"></div>
+            <div className="relative rounded-xl overflow-hidden aspect-square">
               <video
                 autoPlay
                 muted
                 loop
                 playsInline
-                className="w-full relative h-full object-cover aspect-square hex-mask"
+                className="w-full h-full object-cover scale-105"
+                style={{
+                  maskImage: "url('/hexagon2.svg')",
+                  maskSize: 'contain',
+                  maskRepeat: 'no-repeat',
+                  maskPosition: 'center',
+                }}
               >
                 <source src="/видео_дор.mp4" type="video/mp4" />
               </video>
-              <motion.div 
-                className="absolute inset-0 border-2 border-yellow-400 rounded-lg pointer-events-none"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.5 }}
-                transition={{ repeat: Infinity, duration: 2, repeatType: "reverse" }}
-              />
-            </motion.figure>
-          </section>
-        </motion.div>
+            </div>
+          </div>
+        </div>
 
-        {/* Информация о клубе */}
-        <motion.div 
-          className="w-full md:w-1/2"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          <motion.div 
-            className="club-card rounded-2xl p-8 md:p-10 space-y-8 glow-box"
-            whileHover={cardHoverEffect}
-          >
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-            >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-yellow-400 glow-text mb-4">
-                <motion.span 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className="inline-block"
-                >
-                  ФК ДОРДОЙ
-                </motion.span>
-                <motion.span 
-                  className="block text-white text-xl md:text-2xl mt-3 font-medium"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 }}
-                >
-                  Сила. Честь. Победа.
-                </motion.span>
+        {/* Информация о клубе - современный дизайн */}
+        <div className="w-full md:w-1/2">
+          <div className="space-y-8">
+            {/* Заголовок */}
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full">
+                <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium text-cyan-400">ФУТБОЛЬНЫЙ КЛУБ</span>
+              </div>
+              
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight">
+                ДОРДОЙ
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 text-2xl md:text-3xl font-semibold mt-4">
+                  Сила · Честь · Победа
+                </span>
               </h1>
-            </motion.div>
+            </div>
 
-            <motion.div 
-              className="space-y-6"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              {/* Основная информация */}
-              <motion.div 
-                className="flex items-start bg-blue-900/40 p-4 rounded-xl border border-blue-700/50"
-                variants={itemVariants}
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="bg-yellow-400 p-2 rounded-full mr-4 flex-shrink-0">
-                  <svg className="w-6 h-6 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                  </svg>
+            {/* Карточки информации */}
+            <div className="space-y-6">
+              {/* История */}
+              <div className="group relative">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                <div className="relative bg-slate-800/80 backdrop-blur-xl rounded-xl p-6 border border-slate-700/50 hover:border-slate-600/50 transition-all duration-300">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-xl flex items-center justify-center">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-white mb-2">История клуба</h3>
+                      <p className="text-slate-300 leading-relaxed">
+                        Основан в 1997 году. 11-кратный чемпион Кыргызстана. 
+                        Участник международных турниров. Легенда кыргызского футбола.
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-yellow-400 mb-1">История клуба</h3>
-                  <p className="text-white/90">Основан в 1997 году. 11-кратный чемпион Кыргызстана. Участник международных турниров.</p>
-                </div>
-              </motion.div>
+              </div>
 
               {/* Достижения */}
-              <motion.div 
-                className="flex items-start bg-blue-900/40 p-4 rounded-xl border border-blue-700/50"
-                variants={itemVariants}
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="bg-yellow-400 p-2 rounded-full mr-4 flex-shrink-0">
-                  <svg className="w-6 h-6 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-                  </svg>
+              <div className="group relative">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                <div className="relative bg-slate-800/80 backdrop-blur-xl rounded-xl p-6 border border-slate-700/50 hover:border-slate-600/50 transition-all duration-300">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl flex items-center justify-center">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-white mb-4">Достижения</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg hover:bg-slate-700/50 transition-colors">
+                          <div className="w-8 h-8 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+                            <span className="text-yellow-400 font-bold text-sm">11</span>
+                          </div>
+                          <span className="text-slate-300">Чемпионатов</span>
+                        </div>
+                        <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg hover:bg-slate-700/50 transition-colors">
+                          <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                            <span className="text-blue-400 font-bold text-sm">6</span>
+                          </div>
+                          <span className="text-slate-300">Кубков страны</span>
+                        </div>
+                        <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg hover:bg-slate-700/50 transition-colors md:col-span-2">
+                          <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
+                            <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                          </div>
+                          <span className="text-slate-300">Участник Кубка АФК 2006-2007</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-yellow-400 mb-2">Достижения</h3>
-                  <ul className="space-y-3 text-white/90">
-                    <motion.li 
-                      className="flex items-center"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 1.2 }}
-                    >
-                      <span className="w-2 h-2 bg-yellow-400 rounded-full mr-3 animate-pulse"></span>
-                      Рекордные 11 титулов чемпиона Кыргызстана
-                    </motion.li>
-                    <motion.li 
-                      className="flex items-center"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 1.4 }}
-                    >
-                      <span className="w-2 h-2 bg-yellow-400 rounded-full mr-3 animate-pulse" style={{ animationDelay: '0.2s' }}></span>
-                      6 Кубков страны
-                    </motion.li>
-                    <motion.li 
-                      className="flex items-center"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 1.6 }}
-                    >
-                      <span className="w-2 h-2 bg-yellow-400 rounded-full mr-3 animate-pulse" style={{ animationDelay: '0.4s' }}></span>
-                      Участник Кубка АФК 2006-2007
-                    </motion.li>
-                  </ul>
-                </div>
-              </motion.div>
+              </div>
 
               {/* Стадион */}
-              <motion.div 
-                className="flex items-start bg-blue-900/40 p-4 rounded-xl border border-blue-700/50"
-                variants={itemVariants}
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="bg-yellow-400 p-2 rounded-full mr-4 flex-shrink-0">
-                  <svg className="w-6 h-6 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                  </svg>
+              <div className="group relative">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                <div className="relative bg-slate-800/80 backdrop-blur-xl rounded-xl p-6 border border-slate-700/50 hover:border-slate-600/50 transition-all duration-300">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-white mb-2">Стадион</h3>
+                      <p className="text-slate-300 leading-relaxed">
+                        Домашняя арена - стадион "Дордой" в Бишкеке
+                      </p>
+                      <div className="mt-3 flex items-center gap-2 text-cyan-400 font-semibold">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        10,000 зрителей
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-yellow-400 mb-1">Стадион</h3>
-                  <p className="text-white/90">Домашняя арена - стадион "Дордой" в Бишкеке вместимостью 10,000 зрителей</p>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* Кнопка с анимацией */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2 }}
-            >
-              <motion.button
-                className="w-full py-3 px-6 bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold rounded-lg transition-all duration-300 flex items-center justify-center"
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: "0 0 15px rgba(234, 179, 8, 0.7)"
-                }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <span>Подробнее о клубе</span>
-                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-              </motion.button>
-            </motion.div>
-          </motion.div>
-        </motion.div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

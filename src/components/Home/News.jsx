@@ -247,7 +247,7 @@ const FootballNewsPage = () => {
                 <h2 className="text-xl font-bold">Последние новости</h2>
                 <div className="flex items-center text-sm">
                   <RiLiveFill className="text-red-500 mr-1" />
-                  <span>2 LIVE</span>
+                  <span>LIVE</span>
                 </div>
               </div>
 
